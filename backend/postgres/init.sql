@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS "user" (
+	id				SERIAL PRIMARY KEY,
+	username		VARCHAR(42) UNIQUE NOT NULL,
+	email			VARCHAR (255) UNIQUE NOT NULL,
+	password		TEXT NOT NULL,
+	date_of_birth	DATE,
+	created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "match" (
+	id				SERIAL PRIMARY KEY,
+	opponent1_id	INT REFERENCES "user"(id),
+	opponent2_id	INT REFERENCES "user"(id),
+	opponent1_score	INT,
+	opponent2_score	INT,
+	created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "tournament" (
+	id				SERIAL PRIMARY KEY,
+	created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "user_tournament" (
+	id				SERIAL PRIMARY KEY,
+	user_id			INT REFERENCES "user"(id),
+	tournament_id	INT REFERENCES "tournament"(id),
+	created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "match_tournament" (
+	id				SERIAL PRIMARY KEY,
+	match_id		INT REFERENCES "match"(id),
+	tournament_id	INT REFERENCES "tournament"(id),
+	round			SMALLINT,
+	created_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at		TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
