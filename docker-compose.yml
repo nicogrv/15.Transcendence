@@ -4,11 +4,11 @@ services:
   postgres:
     container_name: postgres
     build:
-      context: ./backend/postgres
+      context: ./postgres
     image: postgres:ft_transcendence
     restart: always
     volumes:
-      - database:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=ft_transcendence
       - POSTGRES_USER=${POSTGRES_USER}
@@ -16,16 +16,27 @@ services:
     networks:
       - ft_transcendence
     ports:
-      - 4242:5432
+      - 5432:5432
+
+  django:
+    container_name: django
+    build:
+      context: ./django
+    image: django:ft_transcendence
+    restart: always
+    volumes:
+      - django_code:/app
+    environment:
+      - POSTGRES_DB=ft_transcendence
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - ft_transcendence
 
 networks:
   ft_transcendence:
     driver: bridge
 
 volumes:
-  database:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./database
+  postgres_data:
+  django_code:
