@@ -1,0 +1,8 @@
+body {
+	background-color: red;
+}
+h1 {
+	background-color: blueviolet;
+	padding: 10px;
+	flex: auto;
+}
