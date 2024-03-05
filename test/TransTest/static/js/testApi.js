@@ -10,14 +10,14 @@ function updateUserPage(user, id) {
 		console.log("OK")
 		if (id == "Name") {
 
-			fetch(`/blog/api/UpdateUser/${user.fields.uid}/Name/${input.value}`)
+			fetch(`/blog/api/UpdateUser/${user.pk}/Name/${input.value}`)
 			.then(response => {if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
-			.then(data => {console.log(data)})
+			.then(data => {location.reload();})
 		}
 		else if (id == "Age") {
-			fetch(`/blog/api/UpdateUser/${user.fields.uid}/Age/${input.value}`)
+			fetch(`/blog/api/UpdateUser/${user.pk}/Age/${input.value}`)
 			.then(response => {if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
-			.then(data => {console.log(data)})
+			.then(data => {location.reload();})
 		}
 	})
 	return form
@@ -29,19 +29,25 @@ async function addUserPage(user) {
 	var divAge = document.createElement("div")
 	divName.style.display = "flex"	
 	divAge.style.display = "flex"	
-	// div.style.marginBottom = "500px"
-	div.style.backgroundColor = "#dee2e6"
+	div.style.marginBottom = "50px"
+	div.style.backgroundColor = "#aaaaaa"
+	// divName.style.backgroundColor = "#dee2e6"
+	// divAge.style.backgroundColor = "#aaaaaa"
+	var uid = document.createElement("p")
 	var titre = document.createElement("h3")
 	var age = document.createElement("p")
-	titre.innerHTML = `${user.pk} Name: ${user.fields.Name}`;
+	uid.innerText = user.pk;
+	titre.innerHTML = `Name: ${user.fields.Name}`;
 	age.innerHTML = `Age: ${user.fields.Age}`
 	divName.appendChild(titre)
 	divName.appendChild(updateUserPage(user, "Name"))
 	divAge.appendChild(age)
 	divAge.appendChild(updateUserPage(user, "Age"))
 	div.setAttribute("idUser", user.pk)
-	app.appendChild(divName)
-	app.appendChild(divAge)
+	div.appendChild(uid)
+	div.appendChild(divName)
+	div.appendChild(divAge)
+	app.appendChild(div)
 }
 
 function printUser() {
