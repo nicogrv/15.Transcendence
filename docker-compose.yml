@@ -7,16 +7,14 @@ services:
       context: ./postgres
     image: postgres:ft_transcendence
     restart: always
+    networks:
+      - ft_transcendence
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - ft_transcendence
-    ports:
-      - 5432:5432
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   django:
     container_name: django
@@ -24,14 +22,19 @@ services:
       context: ./django
     image: django:ft_transcendence
     restart: always
+    networks:
+      - ft_transcendence
+    ports:
+      - 8000:8000
     volumes:
       - django_code:/app
     environment:
-      - POSTGRES_DB=${POSTGRES_DBNAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - ft_transcendence
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
 
 networks:
   ft_transcendence:
@@ -40,3 +43,8 @@ networks:
 volumes:
   postgres_data:
   django_code:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./django/srcs

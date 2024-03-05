@@ -3,3 +3,7 @@
 
 # Other
 .vscode/
+
+# Pipenv
+Pipfile
+Pipfile.lock
