@@ -1,9 +1,11 @@
 from django.db import models
+import uuid
 
-# Create your models here.
-class Article(models.Model):
-	title = models.CharField()
+class UserPong(models.Model):
+	uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+	Name = models.CharField()
+	Age = models.CharField()
 	date = models.DateField(auto_now = True)
 
 	def __str__(self):
-		return self.title
+		return self.Name

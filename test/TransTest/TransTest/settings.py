@@ -16,9 +16,9 @@ psUser = os.environ['POSTGRES_USER']
 psPass = os.environ['POSTGRES_PASSWORD']
 psDB = os.environ['POSTGRES_DB']
 psPort = os.environ['POSTGRES_PORT']
+psIp = os.environ['POSTGRES_IP']
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -85,7 +85,7 @@ DATABASES = {
         'NAME': psDB,
         'USER': psUser,
         'PASSWORD': psPass,
-        'HOST': 'localhost',
+        'HOST': psIp,
         'PORT': psPort,
     }
 }

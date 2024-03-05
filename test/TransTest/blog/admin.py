@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Article
+from .models import UserPong
 
-admin.site.register(Article)
+admin.site.register(UserPong)
 
 # Register your models here.
