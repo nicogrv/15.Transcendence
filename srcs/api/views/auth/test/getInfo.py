@@ -4,13 +4,6 @@ from django.core import serializers
 import requests
 import os
 
-	
-
-def getTokenAuthFourtyTwo():
-	
-
-
-
 def getInfo(req):
 	client_id = os.environ['API_UID_KEY']
 	client_secret = os.environ['API_SECRET_KEY']
