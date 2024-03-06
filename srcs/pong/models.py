@@ -104,3 +104,10 @@ class Relation(models.Model):
 			return self.uid_user_one.username + " - " + self.uid_user_two.username
 		else:
 			return f"{self.uid}"
+
+class Message(models.Model):
+	uid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+	uid_sender = models.ForeignKey(Player, related_name='uid_sender_set', on_delete=models.CASCADE, null=True)
+	uid_receiver = models.ForeignKey(Player, related_name='uid_receiver_set', on_delete=models.CASCADE, null=True)
+	visible = models.BooleanField(default=1)
+	sended_at = models.DateTimeField(auto_now_add=True)
