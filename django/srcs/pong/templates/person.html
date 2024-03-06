@@ -1,0 +1,11 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+{% if person %}
+    <p>username: {{ person.username }}</p>
+    <p>first name: {{ person.first_name }}</p>
+    <p>age: {{ person.age }}</p>
+{% else %}
+    <p>This person simply doesnt exist.</p>
+{% endif %}
+{% endblock %}

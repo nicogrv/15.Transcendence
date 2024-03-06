@@ -1,0 +1,11 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+{% for person in persons %}
+    <div style="background-color: red;">
+        <a href="{{ person.username }}">
+            {{ person.firstLetter }}, {{ person.username }}, {{ person.age }}, created the {{ person.created_at }}
+        </a>
+</div>
+{% endfor %}
+{% endblock %}
