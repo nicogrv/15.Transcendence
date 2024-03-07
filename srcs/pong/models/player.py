@@ -41,6 +41,33 @@ class Player(models.Model):
 		else:
 			return self.username
 		
+
+	def getUsername(self):
+			return self.username;
+	def getLogin(self):
+			return self.login
+	def getPic(self):
+			return self.pic
+	def getEmail(self):
+			return self.email
+	def getElo(self):
+			return self.elo
+	def getVictories(self):
+			return self.victories
+	def getDefeats(self):
+			return self.defeats
+	def getStatus(self):
+			return self.status
+	def getToken_login(self):
+			return self.token_login
+	def getToken_login_created_at(self):
+			return self.token_login_created_at
+	def getToken_login_end_at(self):
+			return self.token_login_end_at
+	def getCreated_at(self):
+			return self.created_at
+	def getUpdated_at(self):
+			return self.updated_at
 	class Meta:
 		indexes = [
 			models.Index(fields=['username'])

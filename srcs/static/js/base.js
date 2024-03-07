@@ -15,19 +15,19 @@ function initLoginPage() {
     h3Login.textContent = 'Login';
     h3Login.style.textAlign = 'center';
     
-    const divUsername = document.createElement('div');
-    divUsername.classList.add('mb-3');
+    const divlogin = document.createElement('div');
+    divlogin.classList.add('mb-3');
     
-    const labelUsername = document.createElement('label');
-    labelUsername.setAttribute('for', 'exampleInputEmail1');
-    labelUsername.classList.add('form-label');
-    labelUsername.textContent = 'Username';
+    const labellogin = document.createElement('label');
+    labellogin.setAttribute('for', 'exampleInputEmail1');
+    labellogin.classList.add('form-label');
+    labellogin.textContent = 'login';
     
-    const inputUsername = document.createElement('input');
-    inputUsername.setAttribute('type', 'email');
-    inputUsername.classList.add('form-control');
-    inputUsername.setAttribute('id', 'exampleInputEmail1');
-    inputUsername.setAttribute('aria-describedby', 'emailHelp');
+    const inputlogin = document.createElement('input');
+    inputlogin.setAttribute('type', 'email');
+    inputlogin.classList.add('form-control');
+    inputlogin.setAttribute('id', 'exampleInputEmail1');
+    inputlogin.setAttribute('aria-describedby', 'emailHelp');
     
     const divPassword = document.createElement('div');
     divPassword.classList.add('mb-3');
@@ -63,9 +63,9 @@ function initLoginPage() {
     divSignInUp42.appendChild(formContainerGreen);
     formContainerGreen.appendChild(formLogin);
     formLogin.appendChild(h3Login);
-    formLogin.appendChild(divUsername);
-    divUsername.appendChild(labelUsername);
-    divUsername.appendChild(inputUsername);
+    formLogin.appendChild(divlogin);
+    divlogin.appendChild(labellogin);
+    divlogin.appendChild(inputlogin);
     formLogin.appendChild(divPassword);
     divPassword.appendChild(labelPassword);
     divPassword.appendChild(inputPassword);
@@ -95,6 +95,7 @@ function initLoginPage() {
     inputConfirmPassword.classList.add('form-control');
     inputConfirmPassword.setAttribute('id', 'exampleInputPassword1');
     
+    
     const submitButtonPink = document.createElement('button');
     submitButtonPink.setAttribute('type', 'submit');
     submitButtonPink.classList.add('btn-css', 'btn-GentlePink');
@@ -103,7 +104,7 @@ function initLoginPage() {
     divSignInUp42Flex.appendChild(formContainerPink);
     formContainerPink.appendChild(formSignIn);
     formSignIn.appendChild(h3SignIn);
-    formSignIn.appendChild(divUsername.cloneNode(true)); 
+    formSignIn.appendChild(divlogin.cloneNode(true)); 
     formSignIn.appendChild(divPassword.cloneNode(true)); 
     formSignIn.appendChild(divConfirmPassword);
     divConfirmPassword.appendChild(labelConfirmPassword);
@@ -178,7 +179,21 @@ else if (queryValueCode && !token) {
 else if (!token)
     initLoginPage()
 else {
+    fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer/${token}`)
+    .then(response => {
+        if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
+    .then(data => {
+        let p = document.createElement("p")
+        let img = document.createElement("img")
+        img.setAttribute("src", data.pic)
+        img.style.height = "200px"
+        p.innerText =`Bonjour ${data.username}`
+        document.body.appendChild(img);
+        document.body.appendChild(p);
+})
+
     var h3 = document.createElement('h3')
-    h3.innerHTML = "Login OK"
+    h3.innerHTML = "Login OK\n\n"
     document.body.appendChild(h3);
+    document.body.appendChild(document.createElement('br'));
 }
