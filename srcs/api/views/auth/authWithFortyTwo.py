@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
-from pong.models import Player
+from django.utils import timezone
+from pong.models.player import Player
+from datetime import datetime
 import requests
 import os
 import json
 import time
-
 
 listKey = ['email', 'login', 'image', 'url']
 # doc for keys -> https://api.intra.42.fr/apidoc/2.0/users/me.html
@@ -56,18 +57,25 @@ def getTokenFortyTwo(code):
 
 
 def addPlayerInDb(data):
+	response = JsonResponse(data)
 	newPlayer = Player(
 		username=data['login'],
 		login_42=data['login'],
 		pic=data['image']['link'],
 		email=data['email']
 	)
-	token = newPlayer.update_token();
-	newPlayer.save()
-	return token;
+	token, startToken, endToken = newPlayer.update_token()
+	response.set_cookie('PongToker', token, max_age=endToken - startToken)
+	return response;
+
+def updatePLayerIndb(data):
+	response = JsonResponse(data)
+	updatePlayer = Player.objects.filter(login_42=data["login"])
+	token, startToken, endToken = updatePlayer[0].update_token()
+	response.set_cookie('PongToker', token, max_age=endToken - startToken)
+	return response;
 
 def checkIfPlayerOnDb(data):
-	print(data)
 	dbResult = Player.objects.filter(login_42=data["login"])
 	if (dbResult.count() == 0):
 		return False
@@ -82,9 +90,9 @@ def authWithFortyTwo(req):
 	PlayerOnDb = checkIfPlayerOnDb(data)
 	if ("error" in data): return JsonResponse(data)
 	if (PlayerOnDb == False):
-		response = JsonResponse(data)
-		response.set_cookie('PongToker', addPlayerInDb(data), max_age=3600)
-		return response;
+		return addPlayerInDb(data)
+	else:
+		return updatePLayerIndb(data)
 	return JsonResponse(data)
 
 
