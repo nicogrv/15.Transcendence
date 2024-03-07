@@ -1,9 +1,23 @@
 {
-	"access_token": "c6ca0be128f752d3cbfa42b2f938482b9e0aa4ca5a6f185b3e9f7897af4164a5",
-	"token_type": "bearer",
-	"expires_in": 3992,
-	"refresh_token": "30568bdeb0ea48bffca84c7591b57c73e0cb573ddbe3f7883f22da6518df84b1",
-	"scope": "public",
-	"created_at": 1709747503,
-	"secret_valid_until": 1712162325
+	"token": {
+		"access_token": "a5394dc4c05c0683cd917a031f24b05a82c550c5864eb11e3ed9a9edd7d6036b",
+		"token_type": "bearer",
+		"expires_in": 7200,
+		"refresh_token": "d76dd5bd34b5457a90f6bc035c0c8703dfbff8d189b0001ae5ffa21d97350b67",
+		"scope": "public",
+		"created_at": 1709807708,
+		"secret_valid_until": 1712162325
+	},
+	"email": "ngriveau@student.42.fr",
+	"login": "ngriveau",
+	"url": "https://api.intra.42.fr/v2/users/ngriveau",
+	"image": {
+		"link": "https://cdn.intra.42.fr/users/b6314e10c06ffcead8a044cdd5570fef/ngriveau.jpg",
+		"versions": {
+			"large": "https://cdn.intra.42.fr/users/b660e4ba3efece7f23c5c31fbb18572b/large_ngriveau.jpg",
+			"medium": "https://cdn.intra.42.fr/users/4983af5e24502e6a95192be758963ab7/medium_ngriveau.jpg",
+			"small": "https://cdn.intra.42.fr/users/5bae6ca255ea6d70b3f9f5e5ccd22b49/small_ngriveau.jpg",
+			"micro": "https://cdn.intra.42.fr/users/54e850a83e5503d089147bffadadce45/micro_ngriveau.jpg"
+		}
+	}
 }

@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
-
+from django.utils import timezone
+from datetime import timedelta
 # Create your models here.
 class Player(models.Model):
 	class Status(models.IntegerChoices):
@@ -24,6 +25,16 @@ class Player(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+
+
+	def update_token(self):
+		new_token = uuid.uuid4()
+		self.token_login = new_token
+		self.token_login_created_at = timezone.now()
+		self.token_login_end_at = timezone.now() + timedelta(days=1)  #1h de decalage horraire avec la db
+		self.save()
+		print(new_token)
+		return new_token
 
 	def __str__(self):
 		if self.login_42:
