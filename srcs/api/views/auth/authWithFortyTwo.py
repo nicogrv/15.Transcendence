@@ -65,14 +65,14 @@ def addPlayerInDb(data):
 		email=data['email']
 	)
 	token, startToken, endToken = newPlayer.update_token()
-	response.set_cookie('PongToker', token, max_age=endToken - startToken)
+	response.set_cookie('PongToken', token, max_age=endToken - startToken)
 	return response;
 
 def updatePLayerIndb(data):
 	response = JsonResponse(data)
 	updatePlayer = Player.objects.filter(login_42=data["login"])
 	token, startToken, endToken = updatePlayer[0].update_token()
-	response.set_cookie('PongToker', token, max_age=endToken - startToken)
+	response.set_cookie('PongToken', token, max_age=endToken - startToken)
 	return response;
 
 def checkIfPlayerOnDb(data):
