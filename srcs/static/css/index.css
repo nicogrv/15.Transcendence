@@ -23,7 +23,7 @@ body {
 	height: 300px; 
 	padding: 20px;
 	border-radius: 15px; 
-	box-shadow: 0px 2px 5px #8ab800;
+	box-shadow: 0px 0px 5px #8ab800;
 }
 
 .form-containerPink {
@@ -33,14 +33,14 @@ body {
 	box-sizing: border-box;
 	padding: 20px;
 	border-radius: 16px; 
-	box-shadow: 0px 2px 5px #FBC0FC;
+	box-shadow: 0px 0px 5px #FBC0FC;
 }
 
 .btnLog42 {
 	background-color: #0f0f0f;
-	margin: 10px 10px 20px 20px;
+	margin: 20px 10px 20px 20px;
 	width: 300px; 
 	padding: 20px;
 	border-radius: 15px; 
-	box-shadow: 0px 2px 5px #436d74;
+	box-shadow: 0px 0px 5px #26E3EA;
 }
