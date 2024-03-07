@@ -30,6 +30,7 @@ def getInfoOfStud(data):
 
 
 def getTokenFortyTwo(code):
+	print("ici maie je pense pas")
 	client_id = os.environ['API_UID_KEY_FORTY_TWO']
 	client_secret = os.environ['API_SECRET_KEY_FORTY_TWO']
 	server_ip = os.environ['SERVER_IP']
