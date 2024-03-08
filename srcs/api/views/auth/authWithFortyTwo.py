@@ -65,7 +65,7 @@ def addPlayerInDb(data):
 		pic=data['image']['link'],
 		email=data['email']
 	)
-	token, startToken, endToken = newPlayer[0].update_token()
+	token, startToken, endToken = newPlayer.update_token()
 	response.set_cookie('PongToken', token, max_age=endToken - startToken)
 	return response;
 
@@ -90,6 +90,7 @@ def authWithFortyTwo(req):
 	if ("error" in data): return JsonResponse(data)
 	PlayerOnDb = checkIfPlayerOnDb(data)
 	if ("error" in data): return JsonResponse(data)
+
 	if (PlayerOnDb == False):
 		return addPlayerInDb(data)
 	else:
