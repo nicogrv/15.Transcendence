@@ -14,8 +14,4 @@ def getInfoPlayer(req, token):
     data['token_login_end_at'] = playerInfo[0].getToken_login_end_at()
     data['created_at'] = playerInfo[0].getCreated_at()
     data['updated_at'] = playerInfo[0].getUpdated_at()
-
-
-    # print(playerInfo)
-    # print(playerInfo[0])
     return JsonResponse(data)

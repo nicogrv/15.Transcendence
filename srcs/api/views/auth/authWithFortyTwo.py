@@ -66,10 +66,10 @@ def addPlayerInDb(data):
 		email=data['email']
 	)
 	token, startToken, endToken = newPlayer.update_token()
-	response.set_cookie('PongToken', token, max_age=endToken - startToken)
+	response.set_cookie('PongToken', token, max_age=endToken - startToken) # check max age
 	return response;
 
-def updatePLayerIndb(data):
+def updatePlayerIndb(data):
 	response = JsonResponse(data)
 	updatePlayer = Player.objects.filter(login_42=data["login"])
 	token, startToken, endToken = updatePlayer[0].update_token()
@@ -83,7 +83,7 @@ def checkIfPlayerOnDb(data):
 	elif (dbResult.count() == 1):
 		return True
 	else:
-		data = {"error": "dbResult.count() != 0 || 1"}
+		data = {"error": "dbResult.count() != 0 || 1"} # check 
 
 def authWithFortyTwo(req):
 	data = getTokenFortyTwo(req.GET.get('code'))
@@ -94,8 +94,7 @@ def authWithFortyTwo(req):
 	if (PlayerOnDb == False):
 		return addPlayerInDb(data)
 	else:
-		return updatePLayerIndb(data)
-	return JsonResponse(data)
+		return updatePlayerIndb(data)
 
 
 
