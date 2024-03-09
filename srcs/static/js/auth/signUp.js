@@ -18,21 +18,29 @@ const signUpForm = document.getElementById("signUpForm")
 console.log(signUpForm)
 document.getElementById('signUpForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    var name = document.getElementById('signUpUsername').value;
+    var username = document.getElementById('signUpUsername').value;
     var email = document.getElementById('signUpEmail').value;
     var password = document.getElementById('signUpPassword').value;
     var confirmPassword = document.getElementById('signUpConfirmPassword').value;
-    if (name === '') 
-        return createAlerte('Name is required', 5000);
+    if (username === '') 
+        return createAlerte('Username is required', 5000);
     else if (email === '') 
-        return createAlerte('email is required', 5000);
+        return createAlerte('Email is required', 5000);
     else if (password === '') 
-        return createAlerte('password is required', 5000);
+        return createAlerte('Password is required', 5000);
     else if (confirmPassword === '') 
-        return createAlerte('confirmPassword is required', 5000);
+        return createAlerte('ConfirmPassword is required', 5000);
     else if (password != confirmPassword) 
         return createAlerte('Password and confirm password are not shown', 5000);
-    else
-        return createAlerte('coucou', 5000);
-
+    else {
+         fetch(`http://127.0.0.1:8000/api/auth/signUp/?username=${username}&email=${email}&password=${password}`)
+        .then(response => {
+            if (!response.ok) {createAlerte('La requête a échoué');}return response.json(); })
+        .then(data => {
+            if ("error" in data)
+                createAlerte(data.Error, 5000)
+            else
+                location.href = `/`
+        })
+    }
     });

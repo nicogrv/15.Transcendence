@@ -14,7 +14,7 @@ class Player(models.Model):
 	username = models.SlugField(max_length=24, unique=True)
 	login_42 = models.SlugField(max_length=12, unique=True, null=True, blank=True)
 	pic = models.TextField(null=True, blank=True)
-	email = models.EmailField(null=True, blank=True)
+	email = models.EmailField(null=True, blank=True, unique=True)
 	elo = models.IntegerField(default=0)
 	victories = models.IntegerField(default=0)
 	defeats = models.IntegerField(default=0)
@@ -48,6 +48,7 @@ class Player(models.Model):
 			return True
 		else:
 			return False
+
 	def setPassword(self, password):
 		self.password = make_password(password)
 	

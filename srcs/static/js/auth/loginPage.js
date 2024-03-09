@@ -78,7 +78,10 @@ else { // display info homePage if login
     .then(data => {
         let p = document.createElement("p")
         let img = document.createElement("img")
-        img.setAttribute("src", data.pic)
+        if (data.pic)
+            img.setAttribute("src", data.pic)
+        else
+            img.setAttribute("src", "http://127.0.0.1:8000/static/img/poda.png")
         img.style.height = "200px"
         p.innerText =`Bonjour ${data.username}`
         document.body.appendChild(img);
