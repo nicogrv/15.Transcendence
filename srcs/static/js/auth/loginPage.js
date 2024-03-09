@@ -1,6 +1,8 @@
 
 const loginPage = document.getElementById('loginPage');
 const btnLog42 = document.getElementById('btnLog42');
+
+//LoginPage42
 btnLog42.addEventListener("click", (e) => {
     location.href = ("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-9198daa6a4877961ff5b7a3ca58e5990fd4f618ddc61420e8aa18e18ed316472&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2F&response_type=code")
 })
@@ -44,19 +46,18 @@ function createAlerte(message, timeDeleteAlerte) {
     }, timeDeleteAlerte);
 }
 
+
+
 var token = getCookie('PongToken')
 var messageQuery = getParameterValue('message')
 queryValueCode = getParameterValue("code")
 
-
-console.log("Token récupéré : ", token);
-console.log("queryValueCode: ", queryValueCode)
 if (messageQuery)
 {
     loginPage.style.display = 'block'
     createAlerte(messageQuery, 5000)
 }
-else if (queryValueCode && !token) {
+else if (queryValueCode && !token) { // if no token and have code of 42LoginPage, send at api to create and hang the token in nav
     fetch(`http://127.0.0.1:8000/api/auth/authWithFortyTwo?code=${queryValueCode}`)
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
@@ -70,7 +71,7 @@ else if (queryValueCode && !token) {
 }
 else if (!token)
     loginPage.style.display = 'block'
-else {
+else { // display info homePage if login
     fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer/${token}`)
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
@@ -89,3 +90,5 @@ else {
     document.body.appendChild(h3);
     document.body.appendChild(document.createElement('br'));
 }
+
+//////////////////////////////////////////////

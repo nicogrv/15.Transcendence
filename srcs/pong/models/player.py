@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib.auth.hashers import make_password, check_password
 # Create your models here.
 class Player(models.Model):
 	class Status(models.IntegerChoices):
@@ -25,6 +26,7 @@ class Player(models.Model):
 
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	password = models.CharField(max_length=100, default=None)
 
 
 	def update_token(self):
@@ -40,34 +42,43 @@ class Player(models.Model):
 			return self.username + f" ({self.login_42})"
 		else:
 			return self.username
-		
-
+	
+	def checkPassword(self, password):
+		if (check_password(password, self.getPassword())):
+			return True
+		else:
+			return False
+	def setPassword(self, password):
+		self.password = make_password(password)
+	
 	def getUsername(self):
-			return self.username;
+		return self.username;
 	def getLogin(self):
-			return self.login
+		return self.login
+	def getPassword(self):
+		return self.password
 	def getPic(self):
-			return self.pic
+		return self.pic
 	def getEmail(self):
-			return self.email
+		return self.email
 	def getElo(self):
-			return self.elo
+		return self.elo
 	def getVictories(self):
-			return self.victories
+		return self.victories
 	def getDefeats(self):
-			return self.defeats
+		return self.defeats
 	def getStatus(self):
-			return self.status
+		return self.status
 	def getToken_login(self):
-			return self.token_login
+		return self.token_login
 	def getToken_login_created_at(self):
-			return self.token_login_created_at
+		return self.token_login_created_at
 	def getToken_login_end_at(self):
-			return self.token_login_end_at
+		return self.token_login_end_at
 	def getCreated_at(self):
-			return self.created_at
+		return self.created_at
 	def getUpdated_at(self):
-			return self.updated_at
+		return self.updated_at
 	class Meta:
 		indexes = [
 			models.Index(fields=['username'])
