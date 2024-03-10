@@ -3,7 +3,13 @@ from pong.models.player import Player
 
 def getInfoPlayer(req, token):
     data = {}
-    playerInfo = Player.objects.filter(token_login=token)
+    try:
+        playerInfo = Player.objects.filter(token_login=token)
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
+        
+    if (playerInfo.count() != 1):
+        return JsonResponse({"error": "error"})
     data['username'] = playerInfo[0].getUsername()
     data['pic'] = playerInfo[0].getPic()
     data['elo'] = playerInfo[0].getElo()

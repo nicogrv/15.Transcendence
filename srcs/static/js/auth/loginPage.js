@@ -72,40 +72,32 @@ else if (queryValueCode && !token) { // if no token and have code of 42LoginPage
 else if (!token)
     loginPage.style.display = 'block'
 else { // display info homePage if login
+    document.body.appendChild(document.createElement('p'));
     fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer/${token}`)
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
     .then(data => {
-        let p = document.createElement("p")
-        let img = document.createElement("img")
-        if (data.pic)
-            img.setAttribute("src", data.pic)
-        else
-            img.setAttribute("src", "http://127.0.0.1:8000/static/img/poda.png")
-        img.style.height = "200px"
-        p.innerText =`Bonjour ${data.username}`
-        document.body.appendChild(img);
-        document.body.appendChild(p);
-        var button = document.createElement('button');
-        button.textContent = 'Delete Token';
-        button.className = 'btn-css btn-GentleGreen';
-        button.id = 'deleteTokenBtn';
-    
-        // Ajoutez le bouton au body du document
-        document.body.appendChild(button);
-    
-        // Ajoutez un gestionnaire d'événements au bouton
-        button.addEventListener('click', function() {
-          // Supprimez le token de session en utilisant sessionStorage.removeItem()
-          document.cookie = "PongToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          location.href = "/"
-        });
+        if ("error" in data) {
+            console.log("coucou")
+            document.cookie = "PongToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            location.href = "/"
+            return  
+        }
+        // if (data.pic)
+        //     img.setAttribute("src", data.pic)
+        // else
+        //     img.setAttribute("src", "http://127.0.0.1:8000/static/img/poda.png")
+    // var button = document.createElement('button');
+    // button.textContent = 'Delete Token';
+    // button.className = 'btn-css btn-GentleGreen';
+    // button.id = 'deleteTokenBtn';
+    // document.body.appendChild(button);
+    // button.addEventListener('click', function() {
+    //     document.cookie = "PongToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    //     location.href = "/"
+    // });
 })
 
-    var h3 = document.createElement('h3')
-    h3.innerHTML = "Login OK\n\n"
-    document.body.appendChild(h3);
-    document.body.appendChild(document.createElement('br'));
 }
 
 //////////////////////////////////////////////

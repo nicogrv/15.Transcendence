@@ -1,11 +1,25 @@
 body {
 	background-color: #0f0f0f; 
+
+}
+
+#loginPage {
 	height: 100%;
 	margin: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
+.primaryColor {
+	background-color: #0f0f0f;
+}
+
+.secondaryColor {
+	background-color: #232323;
+}
+
+
 
 .divSignInUp42-flex {
 	background-color: #232323;
