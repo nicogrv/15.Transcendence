@@ -39,8 +39,10 @@ signUpForm.addEventListener('submit', function(e) {
         .then(data => {
             if ("error" in data)
                 createAlerte(data.error, 5000)
-            else
+            else {
+                console.log("reload");
                 location.href = `/`
+            }
         })
     }
     });

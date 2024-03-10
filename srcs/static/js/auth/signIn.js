@@ -21,14 +21,19 @@ signInForm.addEventListener('submit', function(e) {
         return createAlerte('Username is required', 5000);
     else if (password === '') 
         return createAlerte('password is required', 5000);
-    console.log("fetch");
+    console.log("fetchhhh");
     fetch(`http://127.0.0.1:8000/api/auth/signIn/?username=${username}&password=${password}`)
     .then(response => {
+        console.log("ICI")
         if (!response.ok) {createAlerte('La requête a échoué');}return response.json(); })
     .then(data => {
+        console.log("data: ", data)
         if ("error" in data)
             createAlerte(data.error, 5000)
         else
+        {
+            console.log("reload");
             location.href = `/`
+        }
     })
 })
