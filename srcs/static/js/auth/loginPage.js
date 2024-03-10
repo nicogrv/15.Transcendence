@@ -86,6 +86,20 @@ else { // display info homePage if login
         p.innerText =`Bonjour ${data.username}`
         document.body.appendChild(img);
         document.body.appendChild(p);
+        var button = document.createElement('button');
+        button.textContent = 'Delete Token';
+        button.className = 'btn-css btn-GentleGreen';
+        button.id = 'deleteTokenBtn';
+    
+        // Ajoutez le bouton au body du document
+        document.body.appendChild(button);
+    
+        // Ajoutez un gestionnaire d'événements au bouton
+        button.addEventListener('click', function() {
+          // Supprimez le token de session en utilisant sessionStorage.removeItem()
+          document.cookie = "PongToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          location.href = "/"
+        });
 })
 
     var h3 = document.createElement('h3')

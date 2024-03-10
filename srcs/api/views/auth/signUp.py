@@ -9,6 +9,8 @@ def signUp(req):
     response = JsonResponse({"ok" : "Player Sign up"})
     try :
         newPlayer = Player(username=username, email=email)
+        if (newPlayer.isValidPassword(password) != ""):
+            return JsonResponse({"error" : newPlayer.isValidPassword(password)})
         newPlayer.setPassword(password)
         newPlayer.save()
         token, startToken, endToken = newPlayer.update_token()

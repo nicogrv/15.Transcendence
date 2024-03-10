@@ -16,7 +16,7 @@ function createAlerte(message, timeDeleteAlerte) {
 
 const signUpForm = document.getElementById("signUpForm")
 console.log(signUpForm)
-document.getElementById('signUpForm').addEventListener('submit', function(e) {
+signUpForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var username = document.getElementById('signUpUsername').value;
     var email = document.getElementById('signUpEmail').value;
@@ -38,7 +38,7 @@ document.getElementById('signUpForm').addEventListener('submit', function(e) {
             if (!response.ok) {createAlerte('La requête a échoué');}return response.json(); })
         .then(data => {
             if ("error" in data)
-                createAlerte(data.Error, 5000)
+                createAlerte(data.error, 5000)
             else
                 location.href = `/`
         })

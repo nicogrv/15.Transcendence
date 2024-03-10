@@ -45,9 +45,20 @@ class Player(models.Model):
 	
 	def checkPassword(self, password):
 		if (check_password(password, self.getPassword())):
+			print("??????mot de passe OK")
 			return True
 		else:
+			print("??????mot de passe KOOOOOO")
 			return False
+		
+	def isValidPassword(self, password):
+		return ""
+		if (password == ""):
+			return "No use void password"
+		if (len(password) < 8):
+			return "Password less than 8 characters"
+		return ""
+
 
 	def setPassword(self, password):
 		self.password = make_password(password)
