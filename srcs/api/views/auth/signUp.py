@@ -11,10 +11,11 @@ def signUp(req):
         newPlayer = Player(username=username, email=email)
         if (newPlayer.isValidPassword(password) != ""):
             return JsonResponse({"error" : newPlayer.isValidPassword(password)})
-        newPlayer.setPassword(password)
-        newPlayer.save()
-        token, startToken, endToken = newPlayer.update_token()
-        response.set_cookie('PongToken', token, max_age=endToken - startToken) # check max age
+        else:
+            newPlayer.setPassword(password)
+            newPlayer.save()
+            token, startToken, endToken = newPlayer.update_token()
+            response.set_cookie('PongToken', token, max_age=endToken - startToken) # check max age
     except IntegrityError as e:
         if ('DETAIL:  Key (username)' in str(e)):
             return JsonResponse({"error" : "Username already use"})

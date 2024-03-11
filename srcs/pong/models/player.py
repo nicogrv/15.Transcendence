@@ -52,6 +52,9 @@ class Player(models.Model):
 			return False
 		
 	def isValidPassword(self, password):
+		print(str(len(password)))
+		if (24 <= len(password)):
+			return "Password longer than 24 characters"
 		return ""
 		if (password == ""):
 			return "No use void password"
