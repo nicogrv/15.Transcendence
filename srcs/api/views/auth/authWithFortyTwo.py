@@ -30,7 +30,6 @@ def getInfoOfStud(data):
 
 
 def getTokenFortyTwo(code):
-	print("ici maie je pense pas")
 	client_id = os.environ['API_UID_KEY_FORTY_TWO']
 	client_secret = os.environ['API_SECRET_KEY_FORTY_TWO']
 	server_ip = os.environ['SERVER_IP']
@@ -88,20 +87,13 @@ def checkIfPlayerOnDb(data):
 		data = {"error": "dbResult.count() != 0 || 1"} # check 
 
 def authWithFortyTwo(req):
-	print(req.GET.get('code'))
 	data = getTokenFortyTwo(req.GET.get('code'))
-	print("1")
 	if ("error" in data): return JsonResponse(data)
-	print("2")
 	PlayerOnDb = checkIfPlayerOnDb(data)
-	print("3")
 	if ("error" in data): return JsonResponse(data)
-	print("4")
 	if (PlayerOnDb == False):
-		print("5")
 		return addPlayerInDb(data)
 	else:
-		print("6")
 		return updatePlayerIndb(data)
 
 
