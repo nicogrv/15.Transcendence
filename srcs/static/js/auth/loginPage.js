@@ -93,8 +93,7 @@ else { // display info homePage if login
     // button.id = 'deleteTokenBtn';
     // document.body.appendChild(button);
     // button.addEventListener('click', function() {
-    //     document.cookie = "PongToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    //     location.href = "/"
+
     // });
 })
 

@@ -1,40 +1,78 @@
 #topBar {
     display: flex;
+    margin: 5px;
 }
 p {
     margin: 0px;
     padding: 0px;
 }
+:root {
+    /* --primaryColor  */
+    --primary-color: #0f0f0f;
+    --seconde-color: #232323;  
+    --text-color: #dee2e6;  
+    --color-mode: night;  
+    
+    /* --primary-color: #dee2e6;
+    --seconde-color: #adb5bd;  
+    --text-color: #232323;   */
+}
 
 #ppPlayer {
+    color : var(--text-color);
     border-radius: 50%;
     height: 80%;
     width: 80%;
     margin: 10px;
-    border: 0.3em #0f0f0f solid;
+    border: 0.3em var(--primary-color) solid;
 }
 
 #topBarName {
+    color : var(--text-color);
     display: flex;
     flex-direction: column;
-    background-color: #0f0f0f;
-    margin: 10px 30px 10px 10px;
-    padding: 0px 10px 0px 10px;
-    height: 1em;
+    background-color: var(--primary-color);
+    margin: 10px 10px 10px 10px;
+    padding: 0px 30px 0px 10px;
+    border-radius: 15px;
+    height: calc(100% - 20px);
+    
 }
-
-.top {
-    align-self: flex-start; /* Place l'élément en haut */
-  }
-  
-  .bottom {
-    align-self: flex-end; /* Place l'élément en bas */
-  }
 
 
 #topBarDivIn {
+    color : var(--text-color);
     height: 10vh;
     min-height: 100px;
-    margin: 10px;
+    margin: 10px 5px 10px 5px;
     border-radius: 25px;
+}
+
+.btnTopBar {
+	background-color: var(--seconde-color);
+    border-radius: 15px;
+    margin: 10px 10px 10px 5px;
+    height: 100px;
+}
+
+.textTitleTopBar {
+    color : var(--text-color);
+    background-color: var(--primary-color);
+    margin: 10px 10px 10px 10px;
+    padding: 0px 30px 0px 10px;
+    border-radius: 15px;
+    height: calc(100% - 20px);
+    display: flex;
+    justify-content: center; /* Centrage horizontal */
+    align-items: center; /* Centrage vertical */
+    
+}
+
+.titleTopBar {
+    color : var(--text-color);
+    font-size: 3em;
+    margin: 10px 5px 10px 5px;
+	background-color: var(--seconde-color);
+    border-radius: 15px;
+    height: 100px;
 }

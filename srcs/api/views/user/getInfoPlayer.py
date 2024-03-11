@@ -13,6 +13,7 @@ def getInfoPlayer(req, token):
     data['username'] = playerInfo[0].getUsername()
     data['pic'] = playerInfo[0].getPic()
     data['elo'] = playerInfo[0].getElo()
+    data['victories'] = playerInfo[0].getVictories()
     data['defeats'] = playerInfo[0].getDefeats()
     data['status'] = playerInfo[0].getStatus()
     data['token_login'] = playerInfo[0].getToken_login()
