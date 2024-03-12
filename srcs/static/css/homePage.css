@@ -6,7 +6,7 @@ p {
     margin: 0px;
     padding: 0px;
 }
-:root {
+html {
     /* --primaryColor  */
     --primary-color: #0f0f0f;
     --seconde-color: #232323;  
