@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from pong.models.player import Player
 
+
 def getInfoPlayer(req, token):
     data = {}
     try:

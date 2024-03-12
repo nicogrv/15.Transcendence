@@ -4,6 +4,7 @@ from .views.auth import authWithFortyTwo
 from .views.auth import signUp
 from .views.auth import signIn
 from .views.user import getInfoPlayer
+from .views.pong import test
 import os
 
 
@@ -13,4 +14,5 @@ urlpatterns = [
     path('auth/signUp/', signUp.signUp),
     path('auth/signIn/', signIn.signIn),
     path('user/getInfoPlayer/<str:token>', getInfoPlayer.getInfoPlayer),
+    path('pong/test', test.test),
 ]
