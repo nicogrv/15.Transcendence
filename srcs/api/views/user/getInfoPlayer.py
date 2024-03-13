@@ -2,8 +2,12 @@ from django.http import JsonResponse
 from pong.models.player import Player
 
 
-def getInfoPlayer(req, token):
+def getInfoPlayer(req):
     data = {}
+    if (req.COOKIES and "PongToken" in req.COOKIES):
+        token = req.COOKIES["PongToken"]
+    else:
+        return JsonResponse({"error": "No cookie"})
     try:
         playerInfo = Player.objects.filter(token_login=token)
     except Exception as e:

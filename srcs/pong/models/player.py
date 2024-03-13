@@ -66,6 +66,8 @@ class Player(models.Model):
 	def setPassword(self, password):
 		self.password = make_password(password)
 	
+	def getUid(self):
+		return self.uid
 	def getUsername(self):
 		return self.username;
 	def getLogin(self):

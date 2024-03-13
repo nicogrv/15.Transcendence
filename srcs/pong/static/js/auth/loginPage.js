@@ -79,7 +79,7 @@ else if (!token) {
 else { // display info homePage if login
     document.getElementById("titlePage").innerText = "Pong"
     document.body.appendChild(document.createElement('p'));
-    fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer/${token}`)
+    fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer`)   
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
     .then(data => {

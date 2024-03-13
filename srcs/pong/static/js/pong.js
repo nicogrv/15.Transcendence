@@ -8,9 +8,12 @@ class Pong {
         var rPad = new Paddle("right", rightColor);
         var lPad = new Paddle("left", leftColor);
         var ball = new Ball(ballColor);
+        this.playerNb = 0
+        this.startGame = false;
         rPad.s = speedPadle
         lPad.s = speedPadle
         ball.s = speedBall
+
         this.gameLoop(0, rPad, lPad, ball);
     }
     draw(lPad, rPad, ball) {
@@ -34,7 +37,6 @@ class Pong {
         ctx.fillRect(lPad.x, lPad.y, lPad.w, lPad.h);
         ctx.fillStyle = rPad.color;
         ctx.fillRect(rPad.x, rPad.y, rPad.w, rPad.h);
-        
         ball.animateParticles(ctx)
         
         ctx.fillStyle = ball.color;
@@ -48,35 +50,67 @@ class Pong {
     
     gameLoop(frame, lPad, rPad, ball) {
         this.draw(lPad, rPad, ball)
-        // lPad.down()
-        // rPad.up()
-        if (KeyW)
+        if (this.startGame) {
+            if (this.playerNb == 1) {
+                let data = {
+                    player1: {
+                        
+                        ball: {
+                            x: ball.x,
+                            y: ball.y
+                        },
+                        lPad: {
+                            x: lPad.x,
+                            y: lPad.y
+                        }
+                    }
+                };
+                socket.send(JSON.stringify(data));
+            }
+            else {
+                let data = {
+                    player2: {
+                        rPad: {
+                            x: rPad.x,
+                            y: rPad.y
+                        }
+                    }
+                };
+                socket.send(JSON.stringify(data));
+                console.log(socket_ball_x)
+                ball.x = socket_ball_x
+                ball.y = socket_ball_y
+                lPad.x = socket_lPad_x
+                lPad.y = socket_lPad_y
+            }
+            if (KeyW)
             lPad.up()
         if (KeyS)
-            lPad.down()
-        if (ArrowUp)
+        lPad.down()
+            if (ArrowUp)
             rPad.up()
-        if (ArrowDown)
+                if (ArrowDown)
             rPad.down()
-        if (rPad.point > 2 || lPad.point > 2) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white'; 
-            ctx.font = '124px Arial';
-            ctx.textAlign = 'center'; 
-            ctx.textBaseline = 'middle'
-            if (lPad.point > 2)
-                ctx.fillText("Left win", canvas.width/2, canvas.height/2); 
+            if (rPad.point > 2 || lPad.point > 2) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white'; 
+                ctx.font = '124px Arial';
+                ctx.textAlign = 'center'; 
+                ctx.textBaseline = 'middle'
+                if (lPad.point > 2)
+                    ctx.fillText("Left win", canvas.width/2, canvas.height/2); 
+                else
+                    ctx.fillText("Right win", canvas.width/2, canvas.height/2); 
+                ctx.fillStyle = 'gray'; 
+                ctx.font = '80px Arial';
+                ctx.fillText(`${lPad.point}:${rPad.point}`, canvas.width/2, canvas.height/3*2); 
+                }
             else
-                ctx.fillText("Right win", canvas.width/2, canvas.height/2); 
-            ctx.fillStyle = 'gray'; 
-            ctx.font = '80px Arial';
-            ctx.fillText(`${lPad.point}:${rPad.point}`, canvas.width/2, canvas.height/3*2); 
+                ball.moove(lPad, rPad)
+            ctx.fillStyle = 'black'
         }
-        else
-            ball.moove(lPad, rPad)
-        ctx.fillStyle = 'black'
         requestAnimationFrame(() => {
             this.gameLoop(++frame, lPad, rPad, ball)
         });
@@ -157,11 +191,16 @@ class Particle {
         if (this.a - this.vecA < 0 || this.size < 0)
             return "out"
         ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.a = this.a - this.vecA*0.2;
+        if (pong.startGame)
+            ctx.globalAlpha =  this.a - this.vecA;
+        else
+            ctx.globalAlpha = this.a;
         ctx.translate(this.x, this.y);
-        this.r -= this.vecR
+        if (pong.startGame)
+            this.r -= this.vecR
         ctx.rotate(this.r);
-        this.size -= this.vecSize
+        if (pong.startGame)
+            this.size -= this.vecSize
         ctx.fillRect(-10 / 2, -10 / 2, this.size, this.size);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalAlpha = 1
@@ -195,7 +234,7 @@ class Ball {
             this.vecY = (randDir-1)
         }
         else {
-            console.log(randDir)
+            // console.log(randDir)
             this.vecY = randDir
         }
     }
@@ -227,7 +266,6 @@ class Ball {
         if (this.x < 0) {
             this.genParticle(this.x, this.y, "left", this.color)
             rPad.point += 1;
-            console.log("ballOut")
             this.init("right")
             return 
         }
@@ -235,7 +273,6 @@ class Ball {
         if (this.x > canvas.width){
             lPad.point += 1;
             this.genParticle(this.x, this.y, "right", this.color)
-            console.log("ballOut")
             this.init("left")
             return ;
         }
@@ -250,7 +287,9 @@ class Ball {
     animateParticles(ctx) {
         for (let particle of this.particles) {
             particle.draw(ctx);
-            particle.update();
+            if (pong.startGame) {
+                particle.update();
+            }
         }
     }
 
@@ -263,6 +302,7 @@ var ArrowDown = false
 var KeyW = false
 var KeyS = false
 
+var pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
 
 document.addEventListener('keydown', function(event) {
     var keyCode = event.key;
@@ -274,6 +314,11 @@ document.addEventListener('keydown', function(event) {
         KeyW = true
     else if (keyCode === "s")
         KeyS = true
+    else if(keyCode === "g" && pong.startGame)
+        pong.startGame = false
+    else if(keyCode === "g" && !pong.startGame)
+        pong.startGame = true
+
 });
 document.addEventListener('keyup', function(event) {
         var keyCode = event.key;
@@ -289,5 +334,73 @@ document.addEventListener('keyup', function(event) {
 
 
 
-let pong = new Pong("#ff5000", "#5f50f0", "#00f0f0", 10, 8)
+function getCookie(name) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Vérifie si le cookie commence par le nom recherché
+        if (cookie.indexOf(name + '=') === 0) {
+            // Récupère la valeur du cookie
+            return cookie.substring(name.length + 1, cookie.length);
+        }
+    }
+    // Retourne null si le cookie n'est pas trouvé
+    return null;
+}
 
+var token = getCookie('PongToken');
+
+
+var socket_ball_x
+var socket_ball_y
+var socket_lPad_x
+var socket_lPad_y
+var socket_rPad_x
+var socket_rPad_y
+
+
+var socket;
+async function main(matchData) {
+    console.log(matchData)
+    socket = new WebSocket(`ws://localhost:8000/match`);
+    while (!(socket.readyState === WebSocket.OPEN)) {
+        console.log('En attente de connexion...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    socket.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+        // console.log(data)
+        if (("player1" in data) && matchData.player == 2) {
+            socket_ball_x = data.player1.ball.x
+            socket_ball_y = data.player1.ball.y
+            socket_lPad_x = data.player1.lPad.x
+            socket_lPad_y = data.player1.lPad.y
+        }
+        else if (("player2" in data) && matchData.player == 1) {
+            socket_rPad_x = data.player2.rPad.x
+            socket_rPad_y = data.player2.rPad.y
+        }
+        // Utilisez les données reçues comme vous le souhaitez, par exemple, affichez-les dans la console
+        // console.log(data);
+        // Ou mettez à jour le DOM pour afficher les données dans le navigateur
+        // Exemple de mise à jour d'un élément ayant l'ID "data-container"
+    };
+    pong.playerNb = matchData.player
+}
+
+
+if (token) {    
+        fetch("http://127.0.0.1:8000/api/pong/getIdMatch")
+        .then(response => {
+            if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
+        .then(data => {
+            if ("error" in data) {
+                console.log(data)
+                return;
+            }
+            else {
+                main(data.ok);
+            }
+        })
+            
+}
