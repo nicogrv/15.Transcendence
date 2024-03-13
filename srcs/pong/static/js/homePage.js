@@ -1,3 +1,5 @@
+console.log("test")
+
 function getCookie(cookieName) {
     var cookies = document.cookie.split(';');
     for(var i = 0; i < cookies.length; i++) {
@@ -63,3 +65,30 @@ if (token) {
 		console.log("4")
 	
 }
+
+
+// Establish a WebSocket connection
+const socket = new WebSocket('ws://localhost:8000/'); // Replace 'your-server-address' with the address of your WebSocket server
+
+// Event listener for when the connection is established
+socket.addEventListener('open', function (event) {
+    console.log('Connected to WebSocket server');
+    
+    // Send a message to the server (you can send data in various formats like strings, JSON, etc.)
+    socket.send('Hello, server!');
+});
+
+// Event listener for when the server sends a message
+socket.addEventListener('message', function (event) {
+    console.log('Message from server:', event.data); // Display the message received from the server
+});
+
+// Event listener for errors
+socket.addEventListener('error', function (event) {
+    console.error('WebSocket error:', event);
+});
+
+// Event listener for when the connection is closed
+socket.addEventListener('close', function (event) {
+    console.log('Connection to WebSocket server closed');
+});

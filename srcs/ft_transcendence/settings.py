@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'channels',
 	'pong',
 	'api',
+	'Socket',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
-
+ASGI_APPLICATION = 'ft_transcendence.asgi.application'  # new
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -124,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'pong/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -135,11 +136,8 @@ STATICFILES_DIRS = []
 
 CORS_ORIGIN_ALLOW_ALL = True  
 
-# settings.py
-
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'Socket.views.CustomChannelLayer',
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
-
