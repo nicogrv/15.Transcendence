@@ -304,33 +304,34 @@ var KeyS = false
 
 var pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
 
-document.addEventListener('keydown', function(event) {
-    var keyCode = event.key;
-    if (keyCode === "ArrowUp")
-        ArrowUp = true
-    else if (keyCode === "ArrowDown")
-        ArrowDown = true
-    else if (keyCode === "w")
-        KeyW = true
-    else if (keyCode === "s")
-        KeyS = true
-    else if(keyCode === "g" && pong.startGame)
-        pong.startGame = false
-    else if(keyCode === "g" && !pong.startGame)
-        pong.startGame = true
-
-});
-document.addEventListener('keyup', function(event) {
+function initKey(socket) {
+    document.addEventListener('keydown', function(event) {
         var keyCode = event.key;
-    if (keyCode === "ArrowUp")
-        ArrowUp = false
-    else if (keyCode === "ArrowDown")
-        ArrowDown = false
-    else if (keyCode === "w")
-        KeyW = false
-    else if (keyCode === "s")
-        KeyS = false
-});
+        if (keyCode === "w" && !ArrowUp) {
+            socket.send(JSON.stringify({player: pong.playerNb, key: "up", value: true}));
+            ArrowUp = true
+        }
+        else if (keyCode === "s" && !ArrowDown) {
+            socket.send(JSON.stringify({player: pong.playerNb, key: "down", value: true}));
+            ArrowDown = true
+        }
+        else if(keyCode === "g" && pong.startGame)
+            pong.startGame = false
+        else if(keyCode === "g" && !pong.startGame)
+            pong.startGame = true
+    });
+    document.addEventListener('keyup', function(event) {
+        var keyCode = event.key;
+        if (keyCode === "w") {
+            socket.send(JSON.stringify({player: pong.playerNb, key: "up", value: false}));
+            ArrowUp = false
+        }
+        else if (keyCode === "s") {
+            socket.send(JSON.stringify({player: pong.playerNb, key: "down", value: false}));
+            ArrowDown = false
+        }
+    });
+}
 
 
 
@@ -338,69 +339,44 @@ function getCookie(name) {
     var cookies = document.cookie.split(';');
     for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i].trim();
-        // Vérifie si le cookie commence par le nom recherché
         if (cookie.indexOf(name + '=') === 0) {
-            // Récupère la valeur du cookie
             return cookie.substring(name.length + 1, cookie.length);
         }
     }
-    // Retourne null si le cookie n'est pas trouvé
     return null;
 }
 
 var token = getCookie('PongToken');
-
-
-var socket_ball_x
-var socket_ball_y
-var socket_lPad_x
-var socket_lPad_y
-var socket_rPad_x
-var socket_rPad_y
-
-
+var socketJson;
 var socket;
-async function main(matchData) {
-    console.log(matchData)
+
+async function startSocket(matchData) {
+    console.log(matchData, matchData.player)
+    pong.playerNb = matchData.player
     socket = new WebSocket(`ws://localhost:8000/match`);
     while (!(socket.readyState === WebSocket.OPEN)) {
         console.log('En attente de connexion...');
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
+    console.log("Socket ok")
+    initKey(socket)
     socket.onmessage = function(event) {
-        var data = JSON.parse(event.data);
-        // console.log(data)
-        if (("player1" in data) && matchData.player == 2) {
-            socket_ball_x = data.player1.ball.x
-            socket_ball_y = data.player1.ball.y
-            socket_lPad_x = data.player1.lPad.x
-            socket_lPad_y = data.player1.lPad.y
-        }
-        else if (("player2" in data) && matchData.player == 1) {
-            socket_rPad_x = data.player2.rPad.x
-            socket_rPad_y = data.player2.rPad.y
-        }
-        // Utilisez les données reçues comme vous le souhaitez, par exemple, affichez-les dans la console
-        // console.log(data);
-        // Ou mettez à jour le DOM pour afficher les données dans le navigateur
-        // Exemple de mise à jour d'un élément ayant l'ID "data-container"
+        socketJson = JSON.parse(event.data);
     };
-    pong.playerNb = matchData.player
 }
 
 
 if (token) {    
-        fetch("http://127.0.0.1:8000/api/pong/getIdMatch")
-        .then(response => {
-            if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
-        .then(data => {
-            if ("error" in data) {
-                console.log(data)
-                return;
-            }
-            else {
-                main(data.ok);
-            }
-        })
-            
+    fetch("http://127.0.0.1:8000/api/pong/getIdMatch")
+    .then(response => {
+        if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
+    .then(data => {
+        if ("error" in data) {
+            console.log(data)
+            return;
+        }
+        else {
+            startSocket(data.ok);
+        }
+    })       
 }
