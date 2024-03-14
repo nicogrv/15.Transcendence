@@ -1,4 +1,3 @@
-console.log("test")
 
 function getCookie(cookieName) {
     var cookies = document.cookie.split(';');
@@ -49,21 +48,16 @@ function fillDataInPage(data) {
 var token = getCookie('PongToken')
 
 if (token) {
-	console.log("1")
 	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
 	.then(data => {
-		console.log("2")
 		fillDataInPage(data)
 		document.getElementById("btn-DN").addEventListener("click", e => 
 			{ changeColorMode(e)}) // btn change color page
 		document.getElementById("btn-Logout").addEventListener("click", e => 
 			{ logoutbtn(e)})
-		console.log("3")
 	})
-		console.log("4")
-	
 }
 
 

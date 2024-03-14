@@ -3,6 +3,9 @@ const ctx = canvas.getContext('2d');
 
 
 
+
+
+
 class Pong {
     constructor(rightColor, leftColor, ballColor, speedPadle, speedBall) {
         var rPad = new Paddle("right", rightColor);
@@ -51,46 +54,21 @@ class Pong {
     gameLoop(frame, lPad, rPad, ball) {
         this.draw(lPad, rPad, ball)
         if (this.startGame) {
-            if (this.playerNb == 1) {
-                let data = {
-                    player1: {
-                        
-                        ball: {
-                            x: ball.x,
-                            y: ball.y
-                        },
-                        lPad: {
-                            x: lPad.x,
-                            y: lPad.y
-                        }
-                    }
-                };
-                socket.send(JSON.stringify(data));
-            }
-            else {
-                let data = {
-                    player2: {
-                        rPad: {
-                            x: rPad.x,
-                            y: rPad.y
-                        }
-                    }
-                };
-                socket.send(JSON.stringify(data));
-                console.log(socket_ball_x)
-                ball.x = socket_ball_x
-                ball.y = socket_ball_y
-                lPad.x = socket_lPad_x
-                lPad.y = socket_lPad_y
-            }
-            if (KeyW)
-            lPad.up()
-        if (KeyS)
-        lPad.down()
-            if (ArrowUp)
-            rPad.up()
-                if (ArrowDown)
-            rPad.down()
+            console.log(socketJsonGame)
+            ball.x = socketJsonGame.ball.x
+            ball.y = socketJsonGame.ball.y
+            lPad.x = socketJsonGame.lPad.x
+            lPad.y = socketJsonGame.lPad.y
+            rPad.x = socketJsonGame.rPad.x
+            rPad.y = socketJsonGame.rPad.y
+            // if (KeyW)
+            //     lPad.up()
+            // if (KeyS)
+            //     lPad.down()
+            // if (ArrowUp)
+            //     rPad.up()
+            // if (ArrowDown)
+            //     rPad.down()
             if (rPad.point > 2 || lPad.point > 2) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = 'black';
@@ -107,9 +85,19 @@ class Pong {
                 ctx.font = '80px Arial';
                 ctx.fillText(`${lPad.point}:${rPad.point}`, canvas.width/2, canvas.height/3*2); 
                 }
-            else
+            else 
                 ball.moove(lPad, rPad)
             ctx.fillStyle = 'black'
+        }
+        else {
+            ctx.fillStyle = 'white'; 
+            ctx.font = '80px Arial';
+            ctx.textAlign = 'center'; 
+            ctx.textBaseline = 'middle'
+            ctx.fillText(socketJsonStartTimming, canvas.width/2, canvas.height/2-canvas.height/7); 
+            if (socketJsonStartTimming == "")
+                this.startGame = true
+                
         }
         requestAnimationFrame(() => {
             this.gameLoop(++frame, lPad, rPad, ball)
@@ -347,7 +335,8 @@ function getCookie(name) {
 }
 
 var token = getCookie('PongToken');
-var socketJson;
+var socketJsonGame;
+var socketJsonStartTimming = "Waiting player ...";
 var socket;
 
 async function startSocket(matchData) {
@@ -358,11 +347,19 @@ async function startSocket(matchData) {
         console.log('En attente de connexion...');
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
+    socket.send(JSON.stringify({"Bonjour,":" serveur!"}));
     console.log("Socket ok")
     initKey(socket)
     socket.onmessage = function(event) {
-        socketJson = JSON.parse(event.data);
-    };
+        dataJson = JSON.parse(event.data)
+        if ("game" in dataJson)
+            socketJsonGame = dataJson.game;
+        else if ("startGameIn" in dataJson) {
+            socketJsonStartTimming = dataJson.startGameIn
+        }
+        else
+            console.log(dataJson)
+    }; 
 }
 
 
