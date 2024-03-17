@@ -66,29 +66,29 @@ class Ball:
 		else:
 			self.vecY = rand_dir
 
-	async def move(self, l_pad, r_pad):
+	async def move(self, l_pad, r_pad, socket):
 		if self.x + self.r >= r_pad.x and r_pad.y < self.y < r_pad.y + r_pad.h:
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "rPad"}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "lPad", "side": "right"}})
 			self.vecX *= -1
 		if self.x - self.r <= l_pad.x + l_pad.w and l_pad.y < self.y < l_pad.y + l_pad.h:
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "lPad"}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "rPad", "side": "left"}})
 			self.vecX *= -1
 		if self.y + self.r > self.canvas_height:
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "bottom"}})
 			self.vecY *= -1
 		if self.y - self.r < 0:
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "top"}})
 			self.vecY *= -1
 		if self.x - self.r < 0:
 			r_pad.point += 1
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
-			await self.socket.send_to_all_clients({"point": {"left": l_pad.point, "right": l_pad.point}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "left"}})
+			await socket.send_to_all_clients({"point": {"left": l_pad.point, "right": r_pad.point}})
 			self.init("right")
 			return
 		if self.x + self.r > self.canvas_width:
 			l_pad.point += 1
-			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
-			await self.socket.send_to_all_clients({"point": {"left": l_pad.point, "right": l_pad.point}})
+			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "right"}})
+			await socket.send_to_all_clients({"point": {"left": l_pad.point, "right": r_pad.point}})
 			self.init("left")
 			return
 		self.x += float(self.vecX)
@@ -135,11 +135,11 @@ class PongGame:
 				self.left_pad.down(self.canvas["height"])
 			if (Player2Up):
 				self.left_pad.up()
-			if (nextFrame):
+			# if (nextFrame):
 				# nextFrame = False	
-				self.ball.move(self.left_pad, self.right_pad)
+			await self.ball.move(self.left_pad, self.right_pad, self.socket)
 			await self.sendData()
-			await asyncio.sleep(0.001)
+			await asyncio.sleep(0.01)
 			frame += 1
 
 class Pong(AsyncWebsocketConsumer):
@@ -197,13 +197,13 @@ class Pong(AsyncWebsocketConsumer):
 	async def startGame(self):
 			
 		print("Starting pong game...")
-		await asyncio.sleep(0.3)
+		await asyncio.sleep(0.5)
 		await self.send_to_all_clients({"startGameIn": "3"})
-		await asyncio.sleep(0.3)
+		await asyncio.sleep(0.5)
 		await self.send_to_all_clients({"startGameIn": "2"})
-		await asyncio.sleep(0.3)
+		await asyncio.sleep(0.5)
 		await self.send_to_all_clients({"startGameIn": "1"})
-		await asyncio.sleep(0.3)
+		await asyncio.sleep(0.5)
 		await self.send_to_all_clients({"startGameIn": ""})
 
 		canvas = {"width": 800, "height": 600}

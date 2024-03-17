@@ -11,8 +11,13 @@ class Pong {
         var rPad = new Paddle("right", rightColor);
         var lPad = new Paddle("left", leftColor);
         var ball = new Ball(ballColor);
+        this.rightColor = rightColor
+        this.leftColor = leftColor
+        this.ballColor = ballColor
         this.playerNb = 0
         this.startGame = false;
+        this.lPoint = 0
+        this.rPoint = 0
         rPad.s = speedPadle
         lPad.s = speedPadle
         ball.s = speedBall
@@ -30,9 +35,9 @@ class Pong {
         ctx.font = '124px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle'
-        ctx.fillText(lPad.point, canvas.width/2/2, 100); 
+        ctx.fillText(this.lPoint, canvas.width/2/2, 100); 
         ctx.fillStyle = rPad.color; 
-        ctx.fillText(rPad.point, canvas.width/2 + (canvas.width/2/2), 100); 
+        ctx.fillText(this.rPoint, canvas.width/2 + (canvas.width/2/2), 100); 
     
     
         
@@ -41,7 +46,6 @@ class Pong {
         ctx.fillStyle = rPad.color;
         ctx.fillRect(rPad.x, rPad.y, rPad.w, rPad.h);
         ball.animateParticles(ctx)
-        
         ctx.fillStyle = ball.color;
         ctx.beginPath(); 
         ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); 
@@ -53,51 +57,69 @@ class Pong {
     
     gameLoop(frame, lPad, rPad, ball) {
         this.draw(lPad, rPad, ball)
-        if (this.startGame) {
-            console.log(socketJsonGame)
+        if (this.lPoint > 2 || this.rPoint > 2 || 1) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white'; 
+            ctx.font = '124px Arial';
+            ctx.textAlign = 'center'; 
+            ctx.textBaseline = 'middle'
+            if (lPad.point > 2) {
+                ctx.fillStyle = lPad.color; 
+                if (!(frame%10)) {
+                    ball.genParticle( canvas.width/2, canvas.height/3*2 + 124/2, "top", lPad.color)
+                    ball.genParticle( canvas.width/2, canvas.height/3*2, "bottom", lPad.color)
+                }
+                ctx.fillText("Left win", canvas.width/2, canvas.height/2); 
+            }
+            else {
+                if (!(frame%10)) {
+                    ball.genParticle( canvas.width/2, 0, "top", rPad.color)
+                    ball.genParticle( canvas.width, canvas.height/2, "right", rPad.color)
+                    ball.genParticle( canvas.width/2, canvas.height, "bottom", rPad.color)
+                    ball.genParticle( 0, canvas.height/2, "left", rPad.color)
+                }
+                // ctx.fillStyle = rPad.color; 
+                ctx.fillText("Right win", canvas.width/2, canvas.height/2); 
+            }
+            ball.animateParticles(ctx)
+            ctx.fillStyle = 'gray'; 
+            ctx.font = '80px Arial';
+            ctx.fillText(`${this.lPoint}:${this.rPoint}`, canvas.width/2, canvas.height/3*2); 
+            ctx.fillStyle = 'black'
+        }
+        else if (this.startGame) {
             ball.x = socketJsonGame.ball.x
             ball.y = socketJsonGame.ball.y
             lPad.x = socketJsonGame.lPad.x
             lPad.y = socketJsonGame.lPad.y
-            rPad.x = socketJsonGame.rPad.x
+            rPad.x = socketJsonGame.rPad.x      
             rPad.y = socketJsonGame.rPad.y
-            // if (KeyW)
-            //     lPad.up()
-            // if (KeyS)
-            //     lPad.down()
-            // if (ArrowUp)
-            //     rPad.up()
-            // if (ArrowDown)
-            //     rPad.down()
-            if (rPad.point > 2 || lPad.point > 2) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'black';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'white'; 
-                ctx.font = '124px Arial';
-                ctx.textAlign = 'center'; 
-                ctx.textBaseline = 'middle'
-                if (lPad.point > 2)
-                    ctx.fillText("Left win", canvas.width/2, canvas.height/2); 
-                else
-                    ctx.fillText("Right win", canvas.width/2, canvas.height/2); 
-                ctx.fillStyle = 'gray'; 
-                ctx.font = '80px Arial';
-                ctx.fillText(`${lPad.point}:${rPad.point}`, canvas.width/2, canvas.height/3*2); 
-                }
-            // else 
-                // ball.moove(lPad, rPad)
-            ctx.fillStyle = 'black'
-        }
-        else {
+            if (socketJsonParticle && socketJsonParticle.color == "rPad") {
+                ball.genParticle(parseInt(socketJsonParticle.x), parseInt(socketJsonParticle.y), socketJsonParticle.side, this.rightColor)
+                socketJsonParticle = ""
+            }
+            else if (socketJsonParticle && socketJsonParticle.color == "ball") {
+                ball.genParticle(parseInt(socketJsonParticle.x), parseInt(socketJsonParticle.y), socketJsonParticle.side, this.ballColor)
+                socketJsonParticle = ""
+            }
+            else if (socketJsonParticle && socketJsonParticle.color == "lPad") {
+                ball.genParticle(parseInt(socketJsonParticle.x), parseInt(socketJsonParticle.y), socketJsonParticle.side, this.leftColor)
+                socketJsonParticle = ""
+            }
+            if (socketJsonPoint) {
+                this.lPoint = socketJsonPoint.right
+                this.rPoint = socketJsonPoint.left
+                socketJsonPoint = ""
+            }
             ctx.fillStyle = 'white'; 
             ctx.font = '80px Arial';
             ctx.textAlign = 'center'; 
             ctx.textBaseline = 'middle'
             ctx.fillText(socketJsonStartTimming, canvas.width/2, canvas.height/2-canvas.height/7); 
             if (socketJsonStartTimming == "")
-                this.startGame = true
-                
+            this.startGame = true 
         }
         requestAnimationFrame(() => {
             this.gameLoop(++frame, lPad, rPad, ball)
@@ -111,7 +133,6 @@ class Paddle {
             this.x = canvas.width/100
         else
             this.x = canvas.width/100*98
-        this.point = 0
         this.w = canvas.width/100;
         this.h = canvas.height/5;
         this.y = (canvas.height/2)-(this.h/2)
@@ -179,16 +200,11 @@ class Particle {
         if (this.a - this.vecA < 0 || this.size < 0)
             return "out"
         ctx.fillStyle = this.color;
-        if (pong.startGame)
-            ctx.globalAlpha =  this.a - this.vecA;
-        else
-            ctx.globalAlpha = this.a;
+        ctx.globalAlpha =  this.a - this.vecA;
         ctx.translate(this.x, this.y);
-        if (pong.startGame)
-            this.r -= this.vecR
+        this.r -= this.vecR
         ctx.rotate(this.r);
-        if (pong.startGame)
-            this.size -= this.vecSize
+        this.size -= this.vecSize
         ctx.fillRect(-10 / 2, -10 / 2, this.size, this.size);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalAlpha = 1
@@ -233,41 +249,42 @@ class Ball {
 
    
     moove(lPad, rPad) {
-        // if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
-        //     this.genParticle(this.x, this.y, "right", rPad.color)
+        console.log("ici")
+        if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
+            this.genParticle(this.x, this.y, "right", rPad.color)
 
-        //     this.vecX *= -1
-        // }
-        // if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
-        //     this.genParticle(this.x, this.y, "left", lPad.color)
-        //     this.vecX *= -1
-        // }
-        // if (this.y + this.r > canvas.height) {
-        //     this.genParticle(this.x, this.y, "bottom", this.color)
-        //     this.vecY *= -1
-        // }
-        // if (this.y - this.r < 0 ) {
-        //     this.genParticle(this.x, this.y, "top", this.color)
-        //     this.vecY *= -1
-        // }
+            this.vecX *= -1
+        }
+        if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
+            this.genParticle(this.x, this.y, "left", lPad.color)
+            this.vecX *= -1
+        }
+        if (this.y + this.r > canvas.height) {
+            this.genParticle(this.x, this.y, "bottom", this.color)
+            this.vecY *= -1
+        }
+        if (this.y - this.r < 0 ) {
+            this.genParticle(this.x, this.y, "top", this.color)
+            this.vecY *= -1
+        }
         
-        // if (this.x < 0) {
-        //     this.genParticle(this.x, this.y, "left", this.color)
-        //     rPad.point += 1;
-        //     this.init("right")
-        //     return 
-        // }
+        if (this.x < 0) {
+            this.genParticle(this.x, this.y, "left", this.color)
+            rPad.point += 1;
+            this.init("right")
+            return 
+        }
         
-        // if (this.x > canvas.width){
-        //     lPad.point += 1;
-        //     this.genParticle(this.x, this.y, "right", this.color)
-        //     this.init("left")
-        //     return ;
-        // }
-        // this.x += parseFloat(this.vecX * this.s);
-        // this.y += parseFloat(this.vecY * this.s);
+        if (this.x > canvas.width){
+            lPad.point += 1;
+            this.genParticle(this.x, this.y, "right", this.color)
+            this.init("left")
+            return ;
+        }
+        this.x += parseFloat(this.vecX * this.s);
+        this.y += parseFloat(this.vecY * this.s);
     }
-    genParticle (startX, startY, side, color) {
+    genParticle(startX, startY, side, color) {
         for (let i = 0; i < this.nbParticle; i++) {
             this.particles.push(new Particle(startX, startY, side, color));
         }
@@ -275,9 +292,7 @@ class Ball {
     animateParticles(ctx) {
         for (let particle of this.particles) {
             particle.draw(ctx);
-            if (pong.startGame) {
-                particle.update();
-            }
+            particle.update();
         }
     }
 
@@ -340,6 +355,8 @@ function getCookie(name) {
 
 var token = getCookie('PongToken');
 var socketJsonGame;
+var socketJsonPoint
+var socketJsonParticle = "";
 var socketJsonStartTimming = "Waiting player ...";
 var socket;
 
@@ -358,12 +375,12 @@ async function startSocket(matchData) {
         dataJson = JSON.parse(event.data)
         if ("game" in dataJson)
             socketJsonGame = dataJson.game;
-        else if ("startGameIn" in dataJson) {
+        else if ("startGameIn" in dataJson)
             socketJsonStartTimming = dataJson.startGameIn
-        }
-        else if ("particle" in dataJson) {
-            
-        }
+        else if ("particle" in dataJson) 
+            socketJsonParticle = dataJson.particle
+        else if ("point" in dataJson)
+            socketJsonPoint = dataJson.point
         else
             console.log(dataJson)
     }; 
