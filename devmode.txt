@@ -1,5 +1,5 @@
 export $(cat .env)
-
+pip install channels==3.0.4
 curl -F grant_type=authorization_code \
 -F client_id=9198daa6a4877961ff5b7a3ca58e5990fd4f618ddc61420e8aa18e18ed316472 \
 -F client_secret=ffe83e5bafb348b9c5651b3a0b80d4a4b24f8610a3042843c38223c567b68376 \

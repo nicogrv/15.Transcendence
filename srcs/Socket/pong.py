@@ -13,7 +13,9 @@ global Player1Up
 global Player1Down
 global Player2Up
 global Player2Down
+global nextFrame
 
+nextFrame = False
 Player1Up = False
 Player1Down = False
 Player2Up = False
@@ -64,21 +66,29 @@ class Ball:
 		else:
 			self.vecY = rand_dir
 
-	def move(self, l_pad, r_pad):
+	async def move(self, l_pad, r_pad):
 		if self.x + self.r >= r_pad.x and r_pad.y < self.y < r_pad.y + r_pad.h:
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "rPad"}})
 			self.vecX *= -1
 		if self.x - self.r <= l_pad.x + l_pad.w and l_pad.y < self.y < l_pad.y + l_pad.h:
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "lPad"}})
 			self.vecX *= -1
 		if self.y + self.r > self.canvas_height:
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
 			self.vecY *= -1
 		if self.y - self.r < 0:
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
 			self.vecY *= -1
-		if self.x < 0:
+		if self.x - self.r < 0:
 			r_pad.point += 1
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
+			await self.socket.send_to_all_clients({"point": {"left": l_pad.point, "right": l_pad.point}})
 			self.init("right")
 			return
-		if self.x > self.canvas_width:
+		if self.x + self.r > self.canvas_width:
 			l_pad.point += 1
+			await self.socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball"}})
+			await self.socket.send_to_all_clients({"point": {"left": l_pad.point, "right": l_pad.point}})
 			self.init("left")
 			return
 		self.x += float(self.vecX)
@@ -114,8 +124,9 @@ class PongGame:
 		global Player1Down
 		global Player2Up
 		global Player2Down
+		global nextFrame
 		while True:
-			print(Player1Down, Player1Up, Player2Down, Player2Up)
+			# print(Player1Down, Player1Up, Player2Down, Player2Up)
 			if (Player1Down):
 				self.right_pad.down(self.canvas["height"])
 			if (Player1Up):
@@ -124,9 +135,11 @@ class PongGame:
 				self.left_pad.down(self.canvas["height"])
 			if (Player2Up):
 				self.left_pad.up()
+			if (nextFrame):
+				# nextFrame = False	
+				self.ball.move(self.left_pad, self.right_pad)
 			await self.sendData()
-			self.ball.move(self.left_pad, self.right_pad)
-			await asyncio.sleep(0.01)
+			await asyncio.sleep(0.001)
 			frame += 1
 
 class Pong(AsyncWebsocketConsumer):
@@ -146,13 +159,14 @@ class Pong(AsyncWebsocketConsumer):
 		Pong.clients.remove(self)
 
 	async def receive(self, text_data):
+		print("text_data")
 		if text_data:
 			jsondata = json.loads(text_data)
-			print(jsondata)
 			global Player1Up
 			global Player1Down
 			global Player2Up
 			global Player2Down
+			global nextFrame
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == True):
 				Player1Down = True
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == False):
@@ -169,6 +183,10 @@ class Pong(AsyncWebsocketConsumer):
 				Player2Up = True
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == False):
 				Player2Up = False
+			print(jsondata)
+			if ("nextFrame" in jsondata):
+				print("coucou")
+				nextFrame = True
 		else:
 			print("Received empty message")
 
@@ -179,13 +197,13 @@ class Pong(AsyncWebsocketConsumer):
 	async def startGame(self):
 			
 		print("Starting pong game...")
-		await asyncio.sleep(1)
+		await asyncio.sleep(0.3)
 		await self.send_to_all_clients({"startGameIn": "3"})
-		await asyncio.sleep(1)
+		await asyncio.sleep(0.3)
 		await self.send_to_all_clients({"startGameIn": "2"})
-		await asyncio.sleep(1)
+		await asyncio.sleep(0.3)
 		await self.send_to_all_clients({"startGameIn": "1"})
-		await asyncio.sleep(1)
+		await asyncio.sleep(0.3)
 		await self.send_to_all_clients({"startGameIn": ""})
 
 		canvas = {"width": 800, "height": 600}

@@ -85,8 +85,8 @@ class Pong {
                 ctx.font = '80px Arial';
                 ctx.fillText(`${lPad.point}:${rPad.point}`, canvas.width/2, canvas.height/3*2); 
                 }
-            else 
-                ball.moove(lPad, rPad)
+            // else 
+                // ball.moove(lPad, rPad)
             ctx.fillStyle = 'black'
         }
         else {
@@ -233,39 +233,39 @@ class Ball {
 
    
     moove(lPad, rPad) {
-        if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
-            this.genParticle(this.x, this.y, "right", rPad.color)
+        // if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
+        //     this.genParticle(this.x, this.y, "right", rPad.color)
 
-            this.vecX *= -1
-        }
-        if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
-            this.genParticle(this.x, this.y, "left", lPad.color)
-            this.vecX *= -1
-        }
-        if (this.y + this.r > canvas.height) {
-            this.genParticle(this.x, this.y, "bottom", this.color)
-            this.vecY *= -1
-        }
-        if (this.y - this.r < 0 ) {
-            this.genParticle(this.x, this.y, "top", this.color)
-            this.vecY *= -1
-        }
+        //     this.vecX *= -1
+        // }
+        // if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
+        //     this.genParticle(this.x, this.y, "left", lPad.color)
+        //     this.vecX *= -1
+        // }
+        // if (this.y + this.r > canvas.height) {
+        //     this.genParticle(this.x, this.y, "bottom", this.color)
+        //     this.vecY *= -1
+        // }
+        // if (this.y - this.r < 0 ) {
+        //     this.genParticle(this.x, this.y, "top", this.color)
+        //     this.vecY *= -1
+        // }
         
-        if (this.x < 0) {
-            this.genParticle(this.x, this.y, "left", this.color)
-            rPad.point += 1;
-            this.init("right")
-            return 
-        }
+        // if (this.x < 0) {
+        //     this.genParticle(this.x, this.y, "left", this.color)
+        //     rPad.point += 1;
+        //     this.init("right")
+        //     return 
+        // }
         
-        if (this.x > canvas.width){
-            lPad.point += 1;
-            this.genParticle(this.x, this.y, "right", this.color)
-            this.init("left")
-            return ;
-        }
-        this.x += parseFloat(this.vecX * this.s);
-        this.y += parseFloat(this.vecY * this.s);
+        // if (this.x > canvas.width){
+        //     lPad.point += 1;
+        //     this.genParticle(this.x, this.y, "right", this.color)
+        //     this.init("left")
+        //     return ;
+        // }
+        // this.x += parseFloat(this.vecX * this.s);
+        // this.y += parseFloat(this.vecY * this.s);
     }
     genParticle (startX, startY, side, color) {
         for (let i = 0; i < this.nbParticle; i++) {
@@ -302,6 +302,10 @@ function initKey(socket) {
         else if (keyCode === "s" && !ArrowDown) {
             socket.send(JSON.stringify({player: pong.playerNb, key: "down", value: true}));
             ArrowDown = true
+        }
+        else if (keyCode === "n") {
+            console.log("NEXT")
+            socket.send(JSON.stringify({"nextFrame":"ok"}));
         }
         else if(keyCode === "g" && pong.startGame)
             pong.startGame = false
@@ -356,6 +360,9 @@ async function startSocket(matchData) {
             socketJsonGame = dataJson.game;
         else if ("startGameIn" in dataJson) {
             socketJsonStartTimming = dataJson.startGameIn
+        }
+        else if ("particle" in dataJson) {
+            
         }
         else
             console.log(dataJson)
