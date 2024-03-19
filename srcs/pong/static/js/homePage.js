@@ -14,19 +14,25 @@ function getCookie(cookieName) {
 
 function changeColorMode(e){
 	e.preventDefault()
+	dayNight = localStorage.getItem("day-night");
 	let r = document.querySelector(':root');
-	let mode = getComputedStyle(r).getPropertyValue('--color-mode')
-	if (mode == "night") {
+	if (dayNight == "night") {
 		r.style.setProperty('--primary-color', '#dee2e6');
 		r.style.setProperty('--seconde-color', '#adb5bd');
 		r.style.setProperty('--text-color', '#232323');
 		r.style.setProperty('--color-mode', 'day');
+		console.log("-> day")
+		localStorage.setItem("day-night", "day");
+
 	}
 	else {
 		r.style.setProperty('--primary-color', '#0f0f0f');
 		r.style.setProperty('--seconde-color', '#232323');
 		r.style.setProperty('--text-color', '#dee2e6');
 		r.style.setProperty('--color-mode', 'night');
+		console.log("-> night")
+		localStorage.setItem("day-night", "night");
+
 	}
 }
 
@@ -37,6 +43,8 @@ function logoutbtn(e){
 }
 
 function fillDataInPage(data) {
+	
+	document.getElementById('pongGame').style.display = 'block';
 	document.getElementById('homePage').style.display = 'block';
 	document.getElementById('topBarNameTop').innerText = data.username;
 	document.getElementById('topBarNameBottom').innerText = `${data.elo} Elo (${data.victories}/${data.defeats})`;
@@ -50,11 +58,11 @@ var token = getCookie('PongToken')
 if (token) {
 	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer`)
 	.then(response => {
-		if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
+		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {
 		fillDataInPage(data)
 		document.getElementById("btn-DN").addEventListener("click", e => 
-			{ changeColorMode(e)}) // btn change color page
+			{ changeColorMode(e)})
 		document.getElementById("btn-Logout").addEventListener("click", e => 
 			{ logoutbtn(e)})
 	})

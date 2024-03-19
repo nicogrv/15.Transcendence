@@ -1,10 +1,30 @@
 const canvas = document.getElementById('pongCanvas');
 const ctx = canvas.getContext('2d');
 
+var ArrowUp = false
+var ArrowDown = false
+var KeyW = false
+var KeyS = false
+var pong
+var token
+var socketJsonGame;
+var socketJsonPoint
+var socketJsonParticle = "";
+var socketJsonStartTimming = "Waiting player ...";
+var socket;
 
+function getCookie(name) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.indexOf(name + '=') === 0) {
+            return cookie.substring(name.length + 1, cookie.length);
+        }
+    }
+    return null;
+}
 
-
-
+token = getCookie('PongToken');
 
 class Pong {
     constructor(rightColor, leftColor, ballColor, speedPadle, speedBall) {
@@ -13,6 +33,7 @@ class Pong {
         var ball = new Ball(ballColor);
         this.rightColor = rightColor
         this.leftColor = leftColor
+        this.ballColor = ballColor
         this.ballColor = ballColor
         this.playerNb = 0
         this.startGame = false;
@@ -27,7 +48,7 @@ class Pong {
     draw(lPad, rPad, ball) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#0f0f0f';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
     
@@ -57,7 +78,7 @@ class Pong {
     
     gameLoop(frame, lPad, rPad, ball) {
         this.draw(lPad, rPad, ball)
-        if (this.lPoint > 2 || this.rPoint > 2 || 1) {
+        if (this.lPoint > 2 || this.rPoint > 2) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -113,14 +134,14 @@ class Pong {
                 this.rPoint = socketJsonPoint.left
                 socketJsonPoint = ""
             }
-            ctx.fillStyle = 'white'; 
-            ctx.font = '80px Arial';
-            ctx.textAlign = 'center'; 
-            ctx.textBaseline = 'middle'
-            ctx.fillText(socketJsonStartTimming, canvas.width/2, canvas.height/2-canvas.height/7); 
-            if (socketJsonStartTimming == "")
-            this.startGame = true 
         }
+        ctx.fillStyle = 'white'; 
+        ctx.font = '80px Arial';
+        ctx.textAlign = 'center'; 
+        ctx.textBaseline = 'middle'
+        ctx.fillText(socketJsonStartTimming, canvas.width/2, canvas.height/2-canvas.height/7); 
+        if (socketJsonStartTimming == "")
+            this.startGame = true 
         requestAnimationFrame(() => {
             this.gameLoop(++frame, lPad, rPad, ball)
         });
@@ -219,13 +240,15 @@ class Particle {
 
 class Ball {
     init(side) {
+        let randDir = Math.random().toFixed(2);
+        let randSide = Math.random().toFixed(2);
+        
         this.x = canvas.width / 2;
         this.y = canvas.height / 2;
         this.r = 10
         this.nbParticle = 30
         this.particles = []
-        let randDir = Math.random().toFixed(2);
-        let randSide = Math.random().toFixed(2);
+
         if (randSide < 0.5)
             this.vecX = 1
         else
@@ -234,13 +257,10 @@ class Ball {
             this.vecX = 1
         if (side === "left")
             this.vecX = -1
-        if (randDir < 0.5) {
+        if (randDir < 0.5)
             this.vecY = (randDir-1)
-        }
-        else {
-            // console.log(randDir)
+        else 
             this.vecY = randDir
-        }
     }
     constructor(color) {
         this.color = color
@@ -249,10 +269,8 @@ class Ball {
 
    
     moove(lPad, rPad) {
-        console.log("ici")
         if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
             this.genParticle(this.x, this.y, "right", rPad.color)
-
             this.vecX *= -1
         }
         if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
@@ -298,15 +316,6 @@ class Ball {
 
 };
 
-
-
-var ArrowUp = false
-var ArrowDown = false
-var KeyW = false
-var KeyS = false
-
-var pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
-
 function initKey(socket) {
     document.addEventListener('keydown', function(event) {
         var keyCode = event.key;
@@ -338,41 +347,9 @@ function initKey(socket) {
             ArrowDown = false
         }
     });
-}
-
-
-
-function getCookie(name) {
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim();
-        if (cookie.indexOf(name + '=') === 0) {
-            return cookie.substring(name.length + 1, cookie.length);
-        }
-    }
-    return null;
-}
-
-var token = getCookie('PongToken');
-var socketJsonGame;
-var socketJsonPoint
-var socketJsonParticle = "";
-var socketJsonStartTimming = "Waiting player ...";
-var socket;
-
-async function startSocket(matchData) {
-    console.log(matchData, matchData.player)
-    pong.playerNb = matchData.player
-    socket = new WebSocket(`ws://localhost:8000/match`);
-    while (!(socket.readyState === WebSocket.OPEN)) {
-        console.log('En attente de connexion...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-    socket.send(JSON.stringify({"Bonjour,":" serveur!"}));
-    console.log("Socket ok")
-    initKey(socket)
     socket.onmessage = function(event) {
         dataJson = JSON.parse(event.data)
+        console.log(dataJson)
         if ("game" in dataJson)
             socketJsonGame = dataJson.game;
         else if ("startGameIn" in dataJson)
@@ -386,6 +363,21 @@ async function startSocket(matchData) {
     }; 
 }
 
+async function startSocket(matchData) {
+    console.log(matchData, matchData.player)
+    pong.playerNb = matchData.player
+    const matchId = 123; // Remplacez 123 par l'ID approprié
+    socket = new WebSocket(`ws://127.0.0.1:8000/match/${matchId}/`);
+    while (!(socket.readyState === WebSocket.OPEN)) {
+        console.log('Waiting for connection...');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    console.log("Connected")
+    socket.send(JSON.stringify({"Bonjour,":" serveur!"}));
+    initKey(socket)
+}
+
+pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
 
 if (token) {    
     fetch("http://127.0.0.1:8000/api/pong/getIdMatch")
