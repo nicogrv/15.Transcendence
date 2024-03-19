@@ -349,6 +349,7 @@ function initKey(socket) {
     });
     socket.onmessage = function(event) {
         dataJson = JSON.parse(event.data)
+        dataJson = dataJson.message
         console.log(dataJson)
         if ("game" in dataJson)
             socketJsonGame = dataJson.game;
@@ -358,16 +359,15 @@ function initKey(socket) {
             socketJsonParticle = dataJson.particle
         else if ("point" in dataJson)
             socketJsonPoint = dataJson.point
-        else
-            console.log(dataJson)
+        // else
+        //     console.log(dataJson)
     }; 
 }
 
 async function startSocket(matchData) {
     console.log(matchData, matchData.player)
     pong.playerNb = matchData.player
-    const matchId = 123; // Remplacez 123 par l'ID approprié
-    socket = new WebSocket(`ws://127.0.0.1:8000/match/${matchId}/`);
+    socket = new WebSocket(`ws://127.0.0.1:8000/match/${matchData.uid}/`);
     while (!(socket.readyState === WebSocket.OPEN)) {
         console.log('Waiting for connection...');
         await new Promise(resolve => setTimeout(resolve, 1000));

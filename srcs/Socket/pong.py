@@ -1,7 +1,8 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from asgiref.sync import sync_to_async
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 import math
 import random
@@ -68,27 +69,27 @@ class Ball:
 
 	async def move(self, l_pad, r_pad, socket):
 		if self.x + self.r >= r_pad.x and r_pad.y < self.y < r_pad.y + r_pad.h:
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "lPad", "side": "right"}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "lPad", "side": "right"}})
 			self.vecX *= -1
 		if self.x - self.r <= l_pad.x + l_pad.w and l_pad.y < self.y < l_pad.y + l_pad.h:
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "rPad", "side": "left"}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "rPad", "side": "left"}})
 			self.vecX *= -1
 		if self.y + self.r > self.canvas_height:
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "bottom"}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "bottom"}})
 			self.vecY *= -1
 		if self.y - self.r < 0:
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "top"}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "top"}})
 			self.vecY *= -1
 		if self.x - self.r < 0:
 			r_pad.point += 1
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "left"}})
-			await socket.send_to_all_clients({"point": {"left": l_pad.point, "right": r_pad.point}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "left"}})
+			await socket.send_message({"point": {"left": l_pad.point, "right": r_pad.point}})
 			self.init("right")
 			return
 		if self.x + self.r > self.canvas_width:
 			l_pad.point += 1
-			await socket.send_to_all_clients({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "right"}})
-			await socket.send_to_all_clients({"point": {"left": l_pad.point, "right": r_pad.point}})
+			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "right"}})
+			await socket.send_message({"point": {"left": l_pad.point, "right": r_pad.point}})
 			self.init("left")
 			return
 		self.x += float(self.vecX)
@@ -96,7 +97,8 @@ class Ball:
 
 
 class PongGame:
-	def __init__(self, speed_paddle, speed_ball, canvas, socket):
+	def __init__(self, speed_paddle, speed_ball, canvas, socket, idPong):
+		self.idPong = idPong
 		self.canvas = canvas
 		self.socket = socket
 		self.startGame = False
@@ -107,6 +109,11 @@ class PongGame:
 		self.right_pad.s = speed_paddle
 		self.left_pad.s = speed_paddle
 		self.ball.s = speed_ball
+		self.test = 0
+		self.Player1Down = False
+		self.Player1Up = False
+		self.Player2Down = False
+		self.Player2Up = False
 
 	async def sendData(self):
 		data = {
@@ -116,7 +123,7 @@ class PongGame:
 				"ball": {"x": self.ball.x, "y": self.ball.y},
 			}
 		}
-		await self.socket.send_to_all_clients(data)
+		await self.socket.send_message(data)
 
 	async def game_loop(self):
 		frame = 0
@@ -127,62 +134,101 @@ class PongGame:
 		global nextFrame
 		while True:
 			# print(Player1Down, Player1Up, Player2Down, Player2Up)
-			if (Player1Down):
+			if (self.Player1Down):
 				self.right_pad.down(self.canvas["height"])
-			if (Player1Up):
+			if (self.Player1Up):
 				self.right_pad.up()
-			if (Player2Down):
+			if (self.Player2Down):
 				self.left_pad.down(self.canvas["height"])
-			if (Player2Up):
+			if (self.Player2Up):
 				self.left_pad.up()
-			# if (nextFrame):
-				# nextFrame = False	
 			await self.ball.move(self.left_pad, self.right_pad, self.socket)
 			await self.sendData()
 			await asyncio.sleep(0.01)
 			frame += 1
+		print("End pong game")
+
+global nbClient
+nbClient = []
+
 
 class Pong(AsyncWebsocketConsumer):
-	clients = set()
+	PongGameList = []
 
 	async def connect(self):
-		print("CONNECT")
-		await self.accept()
-		Pong.clients.add(self)
-		print("Nb clien:", len(self.clients))
-		await self.send(text_data=json.dumps({"message": "Hello client"}))
-		if len(self.clients) == 2:
-			await self.startGame()
+		global nbClient
+		match_id = self.scope['url_route']['kwargs']['match_id']
+		print(match_id)
+		self.room_id = match_id
+		self.room_group_name = f'chat_{self.room_id}'
+		await self.channel_layer.group_add(
+			self.room_group_name,
+			self.channel_name
+		)
+		found = False
+		for item in nbClient:
+			if match_id in item:
+				item[match_id] += 1
+				found = True
+				await self.accept()
+				if (item[match_id] == 2):
+					print("goooooo")
+					await self.startGame()
+				break
+
+		if not found:
+			nbClient.append({match_id: 1})
+			await self.accept()
+
+		# await self.get_group_member_count(match_id)
 
 	async def disconnect(self, close_code):
 		print("DISCONNECT")
-		Pong.clients.remove(self)
+		await self.channel_layer.group_discard(
+			self.room_group_name,
+			self.channel_name
+		)
+	async def chat_message(self, event):
+		await self.send(text_data=json.dumps({
+			'message' : event['message'],
+		}))
+
+	async def send_message(self, message):
+		await self.channel_layer.group_send(self.room_group_name,
+			{
+				"type": "chat_message",
+				"message": message,
+			}
+		)
+
+	async def getInstancePong(self):
+		for pong in self.PongGameList:
+			if (self.room_id == pong.idPong):
+				print("return ")
+				return pong
 
 	async def receive(self, text_data):
-		print("text_data")
 		if text_data:
+			global PongGameList
 			jsondata = json.loads(text_data)
-			global Player1Up
-			global Player1Down
-			global Player2Up
-			global Player2Down
-			global nextFrame
+			if ("player" in jsondata):
+				instance = await self.getInstancePong()
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == True):
-				Player1Down = True
+				instance.Player1Down = True
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == False):
-				Player1Down = False
+				instance.Player1Down = False
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == True):
-				Player1Up = True
+				instance.Player1Up = True
 			if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == False):
-				Player1Up = False
+				instance.Player1Up = False
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == True):
-				Player2Down = True
+				instance.Player2Down = True
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == False):
-				Player2Down = False
+				instance.Player2Down = False
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == True):
-				Player2Up = True
+				instance.Player2Up = True
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == False):
-				Player2Up = False
+				instance.Player2Up = False
 			print(jsondata)
 			if ("nextFrame" in jsondata):
 				print("coucou")
@@ -190,23 +236,53 @@ class Pong(AsyncWebsocketConsumer):
 		else:
 			print("Received empty message")
 
-	async def send_to_all_clients(self, data):
-		for client in Pong.clients:
-			await client.send(json.dumps(data))
 
 	async def startGame(self):
-			
 		print("Starting pong game...")
+		await self.send_message({"startGameIn": "Vamos"})
+		await asyncio.sleep(1.5)
+		await self.send_message({"startGameIn": "3"})
 		await asyncio.sleep(0.5)
-		await self.send_to_all_clients({"startGameIn": "3"})
+		await self.send_message({"startGameIn": "2"})
 		await asyncio.sleep(0.5)
-		await self.send_to_all_clients({"startGameIn": "2"})
+		await self.send_message({"startGameIn": "1"})
 		await asyncio.sleep(0.5)
-		await self.send_to_all_clients({"startGameIn": "1"})
-		await asyncio.sleep(0.5)
-		await self.send_to_all_clients({"startGameIn": ""})
+		await self.send_message({"startGameIn": ""})
+		
+		test = PongGame(5, 1, {"width": 800, "height": 600}, self, self.room_id)
+		asyncio.create_task(test.game_loop())
+		self.PongGameList.append(test)
 
-		canvas = {"width": 800, "height": 600}
-		pongGame = PongGame(5, 1, canvas, self)
-		asyncio.create_task(pongGame.game_loop())
-		print("End pong game")
+
+
+
+		# print("text_data")
+		# if text_data:
+		# 	jsondata = json.loads(text_data)
+		# 	global Player1Up
+		# 	global Player1Down
+		# 	global Player2Up
+		# 	global Player2Down
+		# 	global nextFrame
+		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == True):
+		# 		Player1Down = True
+		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == False):
+		# 		Player1Down = False
+		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == True):
+		# 		Player1Up = True
+		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == False):
+		# 		Player1Up = False
+		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == True):
+		# 		Player2Down = True
+		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == False):
+		# 		Player2Down = False
+		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == True):
+		# 		Player2Up = True
+		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == False):
+		# 		Player2Up = False
+		# 	print(jsondata)
+		# 	if ("nextFrame" in jsondata):
+		# 		print("coucou")
+		# 		nextFrame = True
+		# else:
+		# 	print("Received empty message")
