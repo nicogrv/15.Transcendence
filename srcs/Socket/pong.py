@@ -3,6 +3,8 @@ import json
 from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from pong.models.match import Match
+
 
 import math
 import random
@@ -14,9 +16,7 @@ global Player1Up
 global Player1Down
 global Player2Up
 global Player2Down
-global nextFrame
 
-nextFrame = False
 Player1Up = False
 Player1Down = False
 Player2Up = False
@@ -67,6 +67,16 @@ class Ball:
 		else:
 			self.vecY = rand_dir
 
+	async def pointLoading(self, socket):
+			await socket.send_message({"startGameIn": "3"})
+			await asyncio.sleep(0.42)
+			await socket.send_message({"startGameIn": "2"})
+			await asyncio.sleep(0.42)
+			await socket.send_message({"startGameIn": "1"})
+			await asyncio.sleep(0.42)
+			await socket.send_message({"startGameIn": ""})
+
+
 	async def move(self, l_pad, r_pad, socket):
 		if self.x + self.r >= r_pad.x and r_pad.y < self.y < r_pad.y + r_pad.h:
 			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "lPad", "side": "right"}})
@@ -84,16 +94,20 @@ class Ball:
 			r_pad.point += 1
 			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "left"}})
 			await socket.send_message({"point": {"left": l_pad.point, "right": r_pad.point}})
+			if (r_pad.point < 2 and l_pad.point < 2):
+				await self.pointLoading(socket)
 			self.init("right")
 			return
 		if self.x + self.r > self.canvas_width:
 			l_pad.point += 1
 			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "ball", "side": "right"}})
 			await socket.send_message({"point": {"left": l_pad.point, "right": r_pad.point}})
+			if (r_pad.point < 2 and l_pad.point < 2):
+				await self.pointLoading(socket)
 			self.init("left")
 			return
-		self.x += float(self.vecX)
-		self.y += float(self.vecY)
+		self.x += float(self.vecX) * self.s
+		self.y += float(self.vecY) * self.s
 
 
 class PongGame:
@@ -131,9 +145,15 @@ class PongGame:
 		global Player1Down
 		global Player2Up
 		global Player2Down
-		global nextFrame
-		while True:
-			# print(Player1Down, Player1Up, Player2Down, Player2Up)
+
+		await self.socket.send_message({"startGameIn": "3"})
+		await asyncio.sleep(0.7)
+		await self.socket.send_message({"startGameIn": "2"})
+		await asyncio.sleep(0.7)
+		await self.socket.send_message({"startGameIn": "1"})
+		await asyncio.sleep(0.7)
+		await self.socket.send_message({"startGameIn": ""})
+		while True and self.right_pad.point < 3 and self.left_pad.point < 3:
 			if (self.Player1Down):
 				self.right_pad.down(self.canvas["height"])
 			if (self.Player1Up):
@@ -146,25 +166,23 @@ class PongGame:
 			await self.sendData()
 			await asyncio.sleep(0.01)
 			frame += 1
-		print("End pong game")
+		return
 
 global nbClient
 nbClient = []
 
+import datetime
 
 class Pong(AsyncWebsocketConsumer):
 	PongGameList = []
 
 	async def connect(self):
 		global nbClient
+
 		match_id = self.scope['url_route']['kwargs']['match_id']
-		print(match_id)
 		self.room_id = match_id
 		self.room_group_name = f'chat_{self.room_id}'
-		await self.channel_layer.group_add(
-			self.room_group_name,
-			self.channel_name
-		)
+		await self.channel_layer.group_add(self.room_group_name,self.channel_name)
 		found = False
 		for item in nbClient:
 			if match_id in item:
@@ -172,39 +190,27 @@ class Pong(AsyncWebsocketConsumer):
 				found = True
 				await self.accept()
 				if (item[match_id] == 2):
-					print("goooooo")
 					await self.startGame()
 				break
 
 		if not found:
 			nbClient.append({match_id: 1})
 			await self.accept()
-
-		# await self.get_group_member_count(match_id)
-
 	async def disconnect(self, close_code):
-		print("DISCONNECT")
-		await self.channel_layer.group_discard(
-			self.room_group_name,
-			self.channel_name
-		)
+		global nbClient
+		for item in nbClient:
+			if self.room_id in item:
+				item[self.room_id] -= 1
+		await self.channel_layer.group_discard(self.room_group_name,self.channel_name)
 	async def chat_message(self, event):
-		await self.send(text_data=json.dumps({
-			'message' : event['message'],
-		}))
+		await self.send(text_data=json.dumps({'message' : event['message']}))
 
 	async def send_message(self, message):
-		await self.channel_layer.group_send(self.room_group_name,
-			{
-				"type": "chat_message",
-				"message": message,
-			}
-		)
+		await self.channel_layer.group_send(self.room_group_name,{"type": "chat_message","message": message,})
 
 	async def getInstancePong(self):
 		for pong in self.PongGameList:
 			if (self.room_id == pong.idPong):
-				print("return ")
 				return pong
 
 	async def receive(self, text_data):
@@ -229,60 +235,13 @@ class Pong(AsyncWebsocketConsumer):
 				instance.Player2Up = True
 			if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == False):
 				instance.Player2Up = False
-			print(jsondata)
-			if ("nextFrame" in jsondata):
-				print("coucou")
-				nextFrame = True
 		else:
 			print("Received empty message")
 
 
 	async def startGame(self):
-		print("Starting pong game...")
-		await self.send_message({"startGameIn": "Vamos"})
-		await asyncio.sleep(1.5)
-		await self.send_message({"startGameIn": "3"})
-		await asyncio.sleep(0.5)
-		await self.send_message({"startGameIn": "2"})
-		await asyncio.sleep(0.5)
-		await self.send_message({"startGameIn": "1"})
-		await asyncio.sleep(0.5)
-		await self.send_message({"startGameIn": ""})
-		
-		test = PongGame(5, 1, {"width": 800, "height": 600}, self, self.room_id)
-		asyncio.create_task(test.game_loop())
-		self.PongGameList.append(test)
-
-
-
-
-		# print("text_data")
-		# if text_data:
-		# 	jsondata = json.loads(text_data)
-		# 	global Player1Up
-		# 	global Player1Down
-		# 	global Player2Up
-		# 	global Player2Down
-		# 	global nextFrame
-		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == True):
-		# 		Player1Down = True
-		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "down" and jsondata["value"] == False):
-		# 		Player1Down = False
-		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == True):
-		# 		Player1Up = True
-		# 	if ("player" in jsondata and jsondata["player"] == 1 and jsondata["key"] == "up" and jsondata["value"] == False):
-		# 		Player1Up = False
-		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == True):
-		# 		Player2Down = True
-		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "down" and jsondata["value"] == False):
-		# 		Player2Down = False
-		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == True):
-		# 		Player2Up = True
-		# 	if ("player" in jsondata and jsondata["player"] == 2 and jsondata["key"] == "up" and jsondata["value"] == False):
-		# 		Player2Up = False
-		# 	print(jsondata)
-		# 	if ("nextFrame" in jsondata):
-		# 		print("coucou")
-		# 		nextFrame = True
-		# else:
-		# 	print("Received empty message")
+		await self.send_message({"startGameIn": "Loading"})
+		await asyncio.sleep(1)
+		game = PongGame(5, 3, {"width": 800, "height": 600}, self, self.room_id)
+		asyncio.create_task(game.game_loop())
+		self.PongGameList.append(game)
