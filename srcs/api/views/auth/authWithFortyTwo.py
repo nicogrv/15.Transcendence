@@ -75,6 +75,18 @@ def updatePlayerIndb(data):
 	updatePlayer = Player.objects.filter(login_42=data["login"])
 	token, startToken, endToken = updatePlayer[0].update_token()
 	response.set_cookie('PongToken', token, max_age=endToken - startToken)
+	print("\n\n\n\n\n\n")
+	url = f"http://127.0.0.1:8000/api/user/updateStatPlayer/{token}"
+	try:
+		r = requests.get(url)
+		if r.status_code == 200:
+			print("Request successful!")
+			print("Response content:", r.text)
+		else:
+			print("Request failed with status code:", r.status_code)
+	except Exception as e:
+		print("An error occurred:", e)
+	print("\n\n\n\n\n\n")
 	return response;
 
 def checkIfPlayerOnDb(data):

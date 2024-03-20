@@ -107,11 +107,13 @@ class Pong {
                 ctx.font = '124px Arial';
                 ctx.textAlign = 'center'; 
                 ctx.textBaseline = 'middle'
-                if (lPad.point > 2) {
+                if (this.lPoint > 2) {
                     ctx.fillStyle = lPad.color; 
                     if (!(frame%10)) {
-                        ball.genParticle( canvas.width/2, canvas.height/3*2 + 124/2, "top", lPad.color)
-                        ball.genParticle( canvas.width/2, canvas.height/3*2, "bottom", lPad.color)
+                        ball.genParticle( canvas.width/2, 0, "top", lPad.color)
+                        ball.genParticle( canvas.width, canvas.height/2, "right", lPad.color)
+                        ball.genParticle( canvas.width/2, canvas.height, "bottom", lPad.color)
+                        ball.genParticle( 0, canvas.height/2, "left", lPad.color)
                     }
                     ctx.fillText("Left win", canvas.width/2, canvas.height/2); 
                 }
@@ -151,8 +153,8 @@ class Pong {
                     socketJsonParticle = ""
                 }
                 if (socketJsonPoint) {
-                    this.lPoint = socketJsonPoint.right
-                    this.rPoint = socketJsonPoint.left
+                    this.lPoint = socketJsonPoint.left
+                    this.rPoint = socketJsonPoint.right
                     socketJsonPoint = ""
                 }
             }
@@ -293,41 +295,7 @@ class Ball {
         this.init("")
     }
 
-   
-    moove(lPad, rPad) {
-        if (this.x + this.r >= rPad.x && this.y < rPad.y + rPad.h && this.y > rPad.y) {
-            this.genParticle(this.x, this.y, "right", rPad.color)
-            this.vecX *= -1
-        }
-        if (this.x - this.r <= lPad.x+lPad.w && this.y < lPad.y + lPad.h && this.y > lPad.y) {
-            this.genParticle(this.x, this.y, "left", lPad.color)
-            this.vecX *= -1
-        }
-        if (this.y + this.r > canvas.height) {
-            this.genParticle(this.x, this.y, "bottom", this.color)
-            this.vecY *= -1
-        }
-        if (this.y - this.r < 0 ) {
-            this.genParticle(this.x, this.y, "top", this.color)
-            this.vecY *= -1
-        }
-        
-        if (this.x < 0) {
-            this.genParticle(this.x, this.y, "left", this.color)
-            rPad.point += 1;
-            this.init("right")
-            return 
-        }
-        
-        if (this.x > canvas.width){
-            lPad.point += 1;
-            this.genParticle(this.x, this.y, "right", this.color)
-            this.init("left")
-            return ;
-        }
-        this.x += parseFloat(this.vecX * this.s);
-        this.y += parseFloat(this.vecY * this.s);
-    }
+
     genParticle(startX, startY, side, color) {
         for (let i = 0; i < this.nbParticle; i++) {
             this.particles.push(new Particle(startX, startY, side, color));
@@ -365,6 +333,7 @@ function initKey(socket) {
     document.addEventListener('keyup', function(event) {
         var keyCode = event.key;
         if (keyCode === "w") {
+            console.log(JSON.stringify({player: pong.playerNb, key: "up", value: false}))
             socket.send(JSON.stringify({player: pong.playerNb, key: "up", value: false}));
             ArrowUp = false
         }
@@ -391,7 +360,7 @@ function initKey(socket) {
 
 async function startSocket(matchData) {
     let stopSocketConnection = false
-    console.log(matchData.uid)
+    console.log(matchData.uid, " ", matchData.player)
     pong.beforeGameMsg.push(`player: ${matchData.player} game: ${matchData.uid}`)
     pong.playerNb = matchData.player
     socket = new WebSocket(`ws://127.0.0.1:8000/match/${matchData.uid}/`);

@@ -8,8 +8,6 @@ def signIn(req):
     response = JsonResponse({"ok" : "Player Sign In"})
     playerUsername = Player.objects.filter(username=username)
     playerEmail = Player.objects.filter(email=username)
-    print(playerUsername.count())
-    print(playerEmail.count())
     if (playerUsername.count() == 0 and playerEmail.count() == 0):
         return JsonResponse({"error" : "There is no player with this username or email address"})
     if (playerUsername.count() == 1 and playerUsername[0].checkPassword(password)):

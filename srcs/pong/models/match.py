@@ -31,6 +31,15 @@ class Match(models.Model):
 
 	def __str__(self):
 		if self.uid_player_one and self.uid_player_two:
-			return self.uid_player_one.username + " vs " + self.uid_player_two.username + f" ({self.uid})"
+			return "(" + str(self.points_player_one) + ":" + str(self.points_player_two) + ") " + self.uid_player_one.username + " vs " +  self.uid_player_two.username + f" ({self.uid})"
 		else:
 			return f"{self.uid}"
+
+	def update_started_at(self):
+		if self.started_at is None:
+			self.started_at = timezone.now()
+
+	
+	def update_ended_at(self):
+		if self.ended_at is None:
+			self.ended_at = timezone.now()

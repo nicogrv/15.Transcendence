@@ -77,7 +77,7 @@ class Ball:
 			await socket.send_message({"startGameIn": ""})
 
 
-	async def move(self, l_pad, r_pad, socket):
+	async def move(self, l_pad, r_pad, socket, match):
 		if self.x + self.r >= r_pad.x and r_pad.y < self.y < r_pad.y + r_pad.h:
 			await socket.send_message({"particle": {"x": self.x, "y": self.y, "color" : "lPad", "side": "right"}})
 			self.vecX *= -1
@@ -111,7 +111,8 @@ class Ball:
 
 
 class PongGame:
-	def __init__(self, speed_paddle, speed_ball, canvas, socket, idPong):
+	def __init__(self, speed_paddle, speed_ball, canvas, socket, idPong, match):
+		self.match = match
 		self.idPong = idPong
 		self.canvas = canvas
 		self.socket = socket
@@ -162,10 +163,18 @@ class PongGame:
 				self.left_pad.down(self.canvas["height"])
 			if (self.Player2Up):
 				self.left_pad.up()
-			await self.ball.move(self.left_pad, self.right_pad, self.socket)
+			await self.ball.move(self.left_pad, self.right_pad, self.socket, self.match)
 			await self.sendData()
 			await asyncio.sleep(0.01)
 			frame += 1
+		self.match.update_ended_at()
+		self.match.points_player_one = self.right_pad.point
+		self.match.points_player_two = self.left_pad.point
+		if self.left_pad.point == 3:
+			self.match.uid_winner = await sync_to_async(lambda: self.match.uid_player_two)()
+		elif self.right_pad.point == 3:
+			self.match.uid_winner = await sync_to_async(lambda: self.match.uid_player_one)()
+		await sync_to_async(self.match.save)()
 		return
 
 global nbClient
@@ -190,7 +199,8 @@ class Pong(AsyncWebsocketConsumer):
 				found = True
 				await self.accept()
 				if (item[match_id] == 2):
-					await self.startGame()
+					match = await sync_to_async(Match.objects.filter(uid=match_id).first)()
+					await self.startGame(match)
 				break
 
 		if not found:
@@ -239,9 +249,11 @@ class Pong(AsyncWebsocketConsumer):
 			print("Received empty message")
 
 
-	async def startGame(self):
+	async def startGame(self, match):
 		await self.send_message({"startGameIn": "Loading"})
 		await asyncio.sleep(1)
-		game = PongGame(5, 3, {"width": 800, "height": 600}, self, self.room_id)
+		game = PongGame(5, 3, {"width": 800, "height": 600}, self, self.room_id, match)
+		match.update_started_at()
+		await sync_to_async(match.save)()
 		asyncio.create_task(game.game_loop())
 		self.PongGameList.append(game)
