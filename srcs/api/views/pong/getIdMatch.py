@@ -22,15 +22,16 @@ def createNewMatch(player):
 
         
 def joinMatch(match, player):
+    print("Join match")
     match.uid_player_two = player
     match.status = 1
     match.save()
     data = {}
     return {"uid": match.uid, "player": 2}
 
-def getIdMatch(req):
-    if (req.COOKIES and "PongToken" in req.COOKIES):
-	    players = Player.objects.filter(token_login=req.COOKIES["PongToken"])
+def getIdMatch(req, UserToken):
+    if (UserToken):
+	    players = Player.objects.filter(token_login=UserToken)
     else:
         return JsonResponse({"error": "no cookie"})
     if (players.count() != 1):

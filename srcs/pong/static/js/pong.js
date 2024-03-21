@@ -1,17 +1,18 @@
 const canvas = document.getElementById('pongCanvas');
 const ctx = canvas.getContext('2d');
 
+var token
+var socket;
 var ArrowUp = false
 var ArrowDown = false
 var KeyW = false
 var KeyS = false
 var pong
-var token
 var socketJsonGame = null;
 var socketJsonPoint
 var socketJsonParticle = "";
 var socketJsonStartTimming = "Waiting player ...";
-var socket;
+var sendData = true
 
 function getCookie(name) {
     var cookies = document.cookie.split(';');
@@ -42,6 +43,8 @@ class Pong {
         this.beforeGame = true
         this.beforeGameIndex = 0
         this.beforeGameMsg = []
+        this.stopGame = false
+        this.updateStat = true;
         rPad.s = speedPadle
         lPad.s = speedPadle
         ball.s = speedBall
@@ -52,12 +55,16 @@ class Pong {
 
     
     beforeGameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#fff"; 
         ctx.font = '20px Arial';
         ctx.textBaseline = 'middle'
+        ctx.textAlign = 'start';
         let beforeGameIndex = 20
         for (let text in this.beforeGameMsg) {
-            ctx.fillText(this.beforeGameMsg[text], 2, beforeGameIndex); 
+            ctx.fillText(this.beforeGameMsg[text], 20, beforeGameIndex); 
             beforeGameIndex += 20
         }
     }
@@ -97,7 +104,6 @@ class Pong {
         if (this.beforeGame)
             this.beforeGameLoop()
         else {
-
             this.draw(lPad, rPad, ball)
             if (this.lPoint > 2 || this.rPoint > 2) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -132,6 +138,14 @@ class Pong {
                 ctx.font = '80px Arial';
                 ctx.fillText(`${this.lPoint}:${this.rPoint}`, canvas.width/2, canvas.height/3*2); 
                 ctx.fillStyle = 'black'
+                if (this.updateStat) {
+                    setTimeout(function() {
+                        document.getElementById("topBarName").setAttribute("needupdate", "true")
+                    }, 5000)
+                    this.updateStat = false
+                }
+                sendData = false
+                socket.close();
             }
             else if (this.startGame && socketJsonGame) {
                 ball.x = socketJsonGame.ball.x
@@ -175,6 +189,8 @@ class Pong {
             if (socketJsonStartTimming == "")
             this.startGame = true 
         }
+        if (this.stopGame)
+            return 
         requestAnimationFrame(() => {
             this.gameLoop(++frame, lPad, rPad, ball)
         });
@@ -310,20 +326,24 @@ class Ball {
 
 };
 
-function initKey(socket) {
+function sendKeys(data){
+    if (sendData)
+        socket.send(data)
+}
+function initKey() {
     document.addEventListener('keydown', function(event) {
         var keyCode = event.key;
         if (keyCode === "w" && !ArrowUp) {
-            socket.send(JSON.stringify({player: pong.playerNb, key: "up", value: true}));
+            sendKeys(JSON.stringify({player: pong.playerNb, key: "up", value: true}));
             ArrowUp = true
         }
         else if (keyCode === "s" && !ArrowDown) {
-            socket.send(JSON.stringify({player: pong.playerNb, key: "down", value: true}));
+            sendKeys(JSON.stringify({player: pong.playerNb, key: "down", value: true}));
             ArrowDown = true
         }
         else if (keyCode === "n") {
             console.log("NEXT")
-            socket.send(JSON.stringify({"nextFrame":"ok"}));
+            sendKeys(JSON.stringify({"nextFrame":"ok"}));
         }
         else if(keyCode === "g" && pong.startGame)
             pong.startGame = false
@@ -334,14 +354,16 @@ function initKey(socket) {
         var keyCode = event.key;
         if (keyCode === "w") {
             console.log(JSON.stringify({player: pong.playerNb, key: "up", value: false}))
-            socket.send(JSON.stringify({player: pong.playerNb, key: "up", value: false}));
+            sendKeys(JSON.stringify({player: pong.playerNb, key: "up", value: false}));
             ArrowUp = false
         }
         else if (keyCode === "s") {
-            socket.send(JSON.stringify({player: pong.playerNb, key: "down", value: false}));
+            sendKeys(JSON.stringify({player: pong.playerNb, key: "down", value: false}));
             ArrowDown = false
         }
     });
+
+
     socket.onmessage = function(event) {
         dataJson = JSON.parse(event.data)
         dataJson = dataJson.message
@@ -353,17 +375,36 @@ function initKey(socket) {
             socketJsonParticle = dataJson.particle
         else if ("point" in dataJson)
             socketJsonPoint = dataJson.point
+        else if ("PlayerNumber" in dataJson) {
+            console.log(dataJson.uid)
+            pong.playerNb = dataJson.PlayerNumber
+        }
+        else if ("CancelMatch" in dataJson) {
+            pong.stopGame = true;
+            startSocket(true, 2)
+        }
         else
             console.log(dataJson)
     }; 
 }
 
-async function startSocket(matchData) {
+async function startSocket(reMatch) {
+    pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
+    ArrowUp = false
+    ArrowDown = false
+    KeyW = false
+    KeyS = false
+    socketJsonGame = null;
+    socketJsonParticle = "";
+    socketJsonStartTimming = "Waiting player ...";
     let stopSocketConnection = false
-    console.log(matchData.uid, " ", matchData.player)
-    pong.beforeGameMsg.push(`player: ${matchData.player} game: ${matchData.uid}`)
-    pong.playerNb = matchData.player
-    socket = new WebSocket(`ws://127.0.0.1:8000/match/${matchData.uid}/`);
+    if (reMatch) {
+        pong.beforeGameMsg.push(`The opponent is disconnected, search for a new game in 5s `)
+        await new Promise(resolve => setTimeout(resolve, 5000));
+       console.log("front")
+    }
+    console.log("back")
+    socket = new WebSocket(`ws://127.0.0.1:8000/match/${token}`);
     pong.beforeGameMsg.push(`New socket`)
     socket.onerror = function(error) {
         stopSocketConnection = true
@@ -375,30 +416,21 @@ async function startSocket(matchData) {
         pong.beforeGameMsg.push(`Socket Close`)
         return 
     };
-    while (!(socket.readyState === WebSocket.OPEN)) {
+    pong.beforeGameMsg.push(`Waiting for connection...`)
+    while (socket.readyState != WebSocket.OPEN) {
         console.log('Waiting for connection...');
         if (stopSocketConnection)
             return 
         await new Promise(resolve => setTimeout(resolve, 100));
     }
+    pong.beforeGameMsg.push(`Connection OK`)
     console.log('Connection OK');
+    initKey()
+    pong.beforeGameMsg.push(`waiting for player's side`)
+    while (pong.playerNb == 0) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
     pong.beforeGame = false
-    initKey(socket)
 }
-
-pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
-pong.beforeGameMsg.push("initialsaion du pong")
-if (token) {    
-    pong.beforeGameMsg.push("Search game")
-    fetch("http://127.0.0.1:8000/api/pong/getIdMatch")
-    .then(response => {
-        if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
-    .then(data => {
-        if ("error" in data) {
-            pong.beforeGameMsg.push(`error: ${data}` )
-            return;
-        }
-        else
-            startSocket(data.ok);
-    })       
-}
+if (token)
+    startSocket(false);

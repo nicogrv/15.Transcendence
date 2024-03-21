@@ -3,7 +3,6 @@ from pong.models.player import Player
 from pong.models.match import Match
 
 def updateStatPlayer(req, PongToken):
-	print("ICI")
 	playersCheck = Player.objects.filter(token_login=PongToken)
 	if (playersCheck.count() != 1):
 		print("ERROR")
@@ -14,13 +13,13 @@ def updateStatPlayer(req, PongToken):
 	loose = 0
 	point = 0
 	for match in Matchs:
-		if (match.uid_player_one == player):
+		if (match.uid_player_one == player and match.uid_player_two is not None):
 			point += match.points_player_one
 			if (match.uid_winner == player):
 				win += 1
 			else:
 				loose += 1
-		elif (match.uid_player_two == player):
+		elif (match.uid_player_two == player and match.uid_player_one is not None):
 			point += match.points_player_two
 			if (match.uid_winner == player):
 				win += 1

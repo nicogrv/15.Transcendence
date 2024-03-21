@@ -4,8 +4,9 @@ from asgiref.sync import sync_to_async
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from pong.models.match import Match
+from uuid import UUID
 
-
+import requests
 import math
 import random
 import time
@@ -146,6 +147,7 @@ class PongGame:
 		global Player1Down
 		global Player2Up
 		global Player2Down
+		global nbClient
 
 		await self.socket.send_message({"startGameIn": "3"})
 		await asyncio.sleep(0.7)
@@ -154,6 +156,18 @@ class PongGame:
 		await self.socket.send_message({"startGameIn": "1"})
 		await asyncio.sleep(0.7)
 		await self.socket.send_message({"startGameIn": ""})
+
+		for item in nbClient:
+			if self.idPong in item:
+				if (item[self.idPong] == 1):
+					print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CancelMatch!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+					await self.socket.send_message({'CancelMatch' : ""})
+					await sync_to_async(self.match.delete)()
+					await self.socket.close()
+					return 
+
+
+
 		while True and self.right_pad.point < 3 and self.left_pad.point < 3:
 			if (self.Player1Down):
 				self.right_pad.down(self.canvas["height"])
@@ -175,6 +189,8 @@ class PongGame:
 		elif self.right_pad.point == 3:
 			self.match.uid_winner = await sync_to_async(lambda: self.match.uid_player_one)()
 		await sync_to_async(self.match.save)()
+		await self.socket.close()
+
 		return
 
 global nbClient
@@ -182,37 +198,107 @@ nbClient = []
 
 import datetime
 
+
+
+
+
+from django.http import JsonResponse
+from pong.models.player import Player
+from pong.models.match import Match
+
+def findMatchToJoin(allMatch, player):
+	i = 0;
+	for match in allMatch:
+		if (not match.uid_player_two) and (player.uid != match.uid_player_one.uid):
+			return i
+		i = i + 1;
+	return -1;
+
+def createNewMatch(player):
+	print("new match")
+	match = Match (
+		uid_player_one=player,
+		status=0,
+	)
+	match.save()
+	data = []
+	return {"uid": match.uid, "player": 1}
+
+		
+def joinMatch(match, player):
+	print("Join match")
+	match.uid_player_two = player
+	match.status = 1
+	match.save()
+	data = {}
+	return {"uid": match.uid, "player": 2}
+
+def getIdMatch(UserToken):
+	try:
+		if (UserToken):
+			try:
+				players = Player.objects.filter(token_login=UserToken)
+			except Exception as e:
+				return {"error": e}
+		else:
+			return ({"error": "no cookie"})
+		if (players.count() != 1):
+			return ({"error": "player != 1"})
+		player = players[0]
+		allMatch = Match.objects.filter()
+
+		indexOfMatch = findMatchToJoin(allMatch, player)
+		if (indexOfMatch == -1):
+			data = createNewMatch(player)
+		else:
+			data = joinMatch(allMatch[indexOfMatch], player)
+		return data
+	except:
+		return {"error" : ""}
+
 class Pong(AsyncWebsocketConsumer):
 	PongGameList = []
 
 	async def connect(self):
 		global nbClient
+		uidPLayer = self.scope['url_route']['kwargs']['uidUser']
+		match = await sync_to_async(getIdMatch)(uidPLayer)
+		if ("error" in match):
+			self.room_id = 'error'
+			self.room_group_name = f'chat_{self.room_id}'
+			await self.channel_layer.group_add(self.room_group_name,self.channel_name)
+			await self.close()
+			return 
 
-		match_id = self.scope['url_route']['kwargs']['match_id']
-		self.room_id = match_id
+		self.room_id = match["uid"]
 		self.room_group_name = f'chat_{self.room_id}'
 		await self.channel_layer.group_add(self.room_group_name,self.channel_name)
 		found = False
 		for item in nbClient:
-			if match_id in item:
-				item[match_id] += 1
+			if self.room_id in item:
+				item[self.room_id] += 1
 				found = True
 				await self.accept()
-				if (item[match_id] == 2):
-					match = await sync_to_async(Match.objects.filter(uid=match_id).first)()
+				await asyncio.sleep(1)
+				print(str(self.room_id))
+				await self.send(text_data=json.dumps({"message": {'PlayerNumber': match["player"], "uid": str(self.room_id)}}))
+				if (item[self.room_id] == 2):
+					match = await sync_to_async(Match.objects.filter(uid=self.room_id).first)()
 					await self.startGame(match)
 				break
 
 		if not found:
-			nbClient.append({match_id: 1})
+			nbClient.append({self.room_id: 1})
 			await self.accept()
+			await asyncio.sleep(1)
+			await self.send(text_data=json.dumps({"message": {'PlayerNumber': match["player"], 'uid': str(self.room_id)}}))
 	async def disconnect(self, close_code):
 		global nbClient
 		for item in nbClient:
 			if self.room_id in item:
 				item[self.room_id] -= 1
 				match = await sync_to_async(Match.objects.filter(uid=self.room_id).first)()
-				if (item[self.room_id] == 0 and match.started_at == None):
+				if (item[self.room_id] == 0 and match.started_at is None):
 					await sync_to_async(match.delete)()
 		await self.channel_layer.group_discard(self.room_group_name,self.channel_name)
 	async def chat_message(self, event):
@@ -253,8 +339,10 @@ class Pong(AsyncWebsocketConsumer):
 
 
 	async def startGame(self, match):
+		global nbClient
+
 		await self.send_message({"startGameIn": "Loading"})
-		await asyncio.sleep(1)
+		await asyncio.sleep(2)
 		game = PongGame(5, 3, {"width": 800, "height": 600}, self, self.room_id, match)
 		match.update_started_at()
 		await sync_to_async(match.save)()

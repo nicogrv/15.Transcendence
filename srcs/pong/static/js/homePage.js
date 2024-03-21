@@ -42,6 +42,43 @@ function logoutbtn(e){
 	location.href = "/"
 }
 
+
+
+function updateStat(){
+	console.log("update")
+	fetch(`http://127.0.0.1:8000/api/user/updateStatPlayer/${token}`)
+	.then(response => {
+		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
+	.then(data => {
+		console.log(data)
+		document.getElementById('topBarNameBottom').innerText = `${data.elo} Elo (${data.win}/${data.loose})`;
+	})
+}
+
+function listenIfupdateStat() {
+    const targetElement = document.getElementById('topBarName');
+    
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'attributes') {
+                if (mutation.attributeName === 'needupdate') {
+                    const needUpdateValue = mutation.target.getAttribute('needupdate');
+                    if (needUpdateValue === "true") {
+						console.log("update 3")
+						targetElement.setAttribute("needupdate", "false")
+						updateStat()
+                    }
+                }
+            }
+        }
+    });
+    
+    const config = { attributes: true, attributeFilter: ['needupdate'] };
+    observer.observe(targetElement, config);
+}
+
+
+
 function fillDataInPage(data) {
 	
 	document.getElementById('pongGame').style.display = 'block';
@@ -50,6 +87,8 @@ function fillDataInPage(data) {
 	document.getElementById('topBarNameBottom').innerText = `${data.elo} Elo (${data.victories}/${data.defeats})`;
 	if (data.pic)
 		document.getElementById('ppPlayer').setAttribute("src", data.pic)
+	listenIfupdateStat()
+	updateStat()
 }
 
 

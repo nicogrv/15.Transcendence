@@ -18,7 +18,7 @@ urlpatterns = [
     path('user/getInfoPlayer', getInfoPlayer.getInfoPlayer),
     path('user/updateStatPlayer/<str:PongToken>', updateStatPlayer.updateStatPlayer),
 
-    path('pong/getIdMatch', getIdMatch.getIdMatch),
+    path('pong/getIdMatch/<str:UserToken>', getIdMatch.getIdMatch),
     
     
 ]
