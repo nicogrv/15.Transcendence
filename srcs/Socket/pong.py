@@ -211,6 +211,9 @@ class Pong(AsyncWebsocketConsumer):
 		for item in nbClient:
 			if self.room_id in item:
 				item[self.room_id] -= 1
+				match = await sync_to_async(Match.objects.filter(uid=self.room_id).first)()
+				if (item[self.room_id] == 0 and match.started_at == None):
+					await sync_to_async(match.delete)()
 		await self.channel_layer.group_discard(self.room_group_name,self.channel_name)
 	async def chat_message(self, event):
 		await self.send(text_data=json.dumps({'message' : event['message']}))
