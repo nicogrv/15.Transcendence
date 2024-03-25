@@ -24,6 +24,16 @@
 
 }
  */
+.btn-red {
+	background-color: #cc0000;
+	transition: all 0.2s ease;
+}
+
+
+.btn-red:hover {
+	background-color: #7a0000;
+}
+
 
 .btn-GentleGreen {
 	background-color: #8ab800;

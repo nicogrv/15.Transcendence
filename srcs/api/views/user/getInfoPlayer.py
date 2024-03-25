@@ -12,7 +12,6 @@ def getInfoPlayer(req):
         playerInfo = Player.objects.filter(token_login=token)
     except Exception as e:
         return JsonResponse({"error": str(e)})
-        
     if (playerInfo.count() != 1):
         return JsonResponse({"error": "error"})
     data['username'] = playerInfo[0].getUsername()
