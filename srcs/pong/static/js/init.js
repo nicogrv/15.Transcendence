@@ -2,6 +2,7 @@ function changeColorMode(){
 	let r = document.querySelector(':root');
 	if (localStorage.getItem("day-night") == "day") {
 		r.style.setProperty('--primary-color', '#dee2e6');
+		document.querySelector("html").setAttributs('data-bs-theme', 'light');
 		r.style.setProperty('--seconde-color', '#adb5bd');
 		r.style.setProperty('--text-color', '#232323');
 		r.style.setProperty('--color-mode', 'day');
@@ -9,6 +10,7 @@ function changeColorMode(){
 	}
 	else {
 		r.style.setProperty('--primary-color', '#0f0f0f');
+		document.html.setAttributs('data-bs-theme', 'dark');
 		r.style.setProperty('--seconde-color', '#232323');
 		r.style.setProperty('--text-color', '#dee2e6');
 		r.style.setProperty('--color-mode', 'night');

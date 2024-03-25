@@ -11,7 +11,6 @@ function getCookie(cookieName) {
     return null;
 }
 
-
 function changeColorMode(e){
 	e.preventDefault()
 	dayNight = localStorage.getItem("day-night");
@@ -82,6 +81,7 @@ function listenIfupdateStat() {
 function fillDataInPage(data) {
 	
 	document.getElementById('pongGame').style.display = 'block';
+	document.getElementById('friends').style.display = 'block';
 	document.getElementById('homePage').style.display = 'block';
 	document.getElementById('topBarNameTop').innerText = data.username;
 	document.getElementById('topBarNameBottom').innerText = `${data.elo} Elo (${data.victories}/${data.defeats})`;
@@ -106,6 +106,8 @@ if (token) {
 			{ logoutbtn(e)})
 	})
 }
+
+
 
 
 // Establish a WebSocket connection
