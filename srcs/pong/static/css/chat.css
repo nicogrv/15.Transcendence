@@ -1,0 +1,27 @@
+#endSiteBody {
+	display: flex;
+}
+
+#chat {
+	margin: 20px;
+	width: 400px;
+	background-color: var(--seconde-color);
+	border-radius: 20px;	
+}
+
+#chatTitle {
+	margin: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom: solid var(--background-color);
+}
+
+#selectChatUser {
+	border-radius: 15px;
+	margin: 20px;
+	flex:1;
+	background-color: var(--third-color);
+	height: 80px;
+}
+

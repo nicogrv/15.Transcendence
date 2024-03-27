@@ -1,0 +1,6 @@
+#tournament {
+	border-radius: 15px;
+	margin: 20px;
+	flex:1;
+	background-color: var(--primary-color);
+}

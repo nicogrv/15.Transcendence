@@ -4,11 +4,15 @@ body {
 	--primary-color: #66E4EB;
 	--seconde-color: #EC83E5;
 	--third-color: #CBFA0A	;
+	/* --primary-color: #E78BE5;
+	--seconde-color: #39D6AC;
+	--third-color: #E06688	; */
+	--background-color: #F3FBFC;
+	--background-color: #1B1B1B;
 	font-family: "Roboto", sans-serif;
 	font-weight: 500;
-	background-color: #F3FBFC;
-	background-color: #1B1B1B;
-    color : #232323;
+	background-color: var(--background-color);
+    color : var(--background-color);
 
 }
 

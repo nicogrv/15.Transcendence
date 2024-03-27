@@ -6,9 +6,14 @@
 	width: fit-content;
 	border-radius: 20px;
 	height: 630px;
-	margin: 20px;
+	margin: 20px 0px 20px 0px;
 	padding: 15px;
 	background-color: var(--seconde-color);;
+	display: flex;
+	flex: 1;
+	border-radius: 20px;
+	justify-content: center;
+	align-items: center; 
 }
 
 #pongCanvas{
@@ -153,3 +158,4 @@
 	background: linear-gradient(180deg, var(--third-color) 0%, rgba(183,245,1,0) 105%);
 	border-radius: 0px 0px 15px 15px ;
 }
+
