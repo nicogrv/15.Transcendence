@@ -1,6 +1,9 @@
 
 
 body {
+	--primary-color: #66E4EB;
+	--seconde-color: #EC83E5;
+	--third-color: #CBFA0A	;
 	font-family: "Roboto", sans-serif;
 	font-weight: 500;
 	background-color: #F3FBFC;

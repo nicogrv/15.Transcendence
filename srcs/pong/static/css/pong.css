@@ -1,13 +1,155 @@
+#bodySite {
+	display: flex;
+}
+
 #pongGame {
 	width: fit-content;
 	border-radius: 20px;
 	height: 630px;
 	margin: 20px;
 	padding: 15px;
-	background-color: #EC83E5;
+	background-color: var(--seconde-color);;
 }
 
 #pongCanvas{
 	border-radius: 10px;
+}
 
+#opponentsData {
+	border-radius: 20px;
+	height: fit-content;
+	display: flex;
+	margin: 20px;
+	height: 80px;
+	padding: 10px;
+	background-color: var(--primary-color);;
+	align-items: center;
+}
+
+#opponentsDataPp {
+	display: flex;
+	height: 60px;
+	border-radius: 50%;
+	border: solid 3px #232323 ;
+}
+
+#opponentsDataText {
+	display:flex;
+	flex-direction: column;
+	padding-left: 15px;
+}
+
+#opponentsDataHistory {
+	display:flex;
+	flex-direction: column;
+}
+
+#opponentsHistory{
+	display: flex;
+	flex-direction: column;
+	flex:1 ;
+	border-radius: 15px;
+	margin: 0px 20px 20px 20px;
+	/* background-color: var(--primary-color);; */
+}
+
+.opponentsHistoryTitle {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--primary-color);;
+	border-bottom: solid;
+}
+
+.opponentsHistoryWin {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--third-color);
+	border-bottom: solid;
+}
+
+.opponentsHistoryLoose{
+	display: flex;
+	flex-direction: column;
+	align-items: center;	
+	border-bottom: solid;
+	background-color: var(--seconde-color);
+}
+
+#opponentsHistoryLooseEnd{
+	flex: 1;
+	background: var(--seconde-color);
+	background: linear-gradient(180deg, var(--seconde-color) 0%, rgba(237,133,230,0) 105%);
+	border-radius: 0px 0px 15px 15px ;
+}
+
+#opponentsHistoryWinEnd{
+	flex: 1;
+	background: var(--third-color);
+	background: linear-gradient(180deg, var(--third-color) 0%, rgba(183,245,1,0) 105%);
+	border-radius: 0px 0px 15px 15px ;
+}
+
+
+
+
+
+
+
+
+
+#meDataHistory {
+	margin-top: 20px;
+	display:flex;
+	flex-direction: column;
+}
+
+#meHistory{
+	display: flex;
+	flex-direction: column;
+	flex:1 ;
+	border-radius: 15px;
+	margin: 0px 20px 20px 20px;
+	/* background-color: var(--primary-color);; */
+}
+
+.meHistoryTitle {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--primary-color);;
+	border-bottom: solid;
+}
+
+.meHistoryWin {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: var(--third-color);;
+	border-bottom: solid;
+}
+
+.meHistoryLoose{
+	padding: 0px 10px 0px 10px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;	
+	border-bottom: solid;
+	background-color: var(--seconde-color);;
+}
+
+#meHistoryLooseEnd{
+	padding: 0px 10px 0px 10px;
+	flex: 1;	
+	background: var(--seconde-color);
+	background: linear-gradient(180deg, var(--seconde-color) 0%, rgba(237,133,230,0) 105%);
+	border-radius: 0px 0px 15px 15px ;
+}
+
+#meHistoryWinEnd{
+	flex: 1;
+	background: var(--third-color);
+	background: linear-gradient(180deg, var(--third-color) 0%, rgba(183,245,1,0) 105%);
+	border-radius: 0px 0px 15px 15px ;
 }

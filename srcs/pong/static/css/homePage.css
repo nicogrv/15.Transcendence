@@ -1,5 +1,5 @@
 #logoDiv {
-	background-color: #B7F501;
+	background-color: var(--third-color);;
 	display: flex;
 	flex: 1;
 	border-radius: 20px;
@@ -20,14 +20,13 @@
 	display: flex;
 	padding: 10px;
 	border-radius: 20px;
-	background-color: #66E4EB;
+	background-color: var(--primary-color);;
 	
 	margin: 0px 20px 0px 20px;
 
 }
 
 #ppPlayer {
-	background-color: red;	
 	border-radius: 50%;
 	border: solid 3px #232323 ;
 }
