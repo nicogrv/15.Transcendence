@@ -1,78 +1,33 @@
+#logoDiv {
+	background-color: #B7F501;
+	display: flex;
+	flex: 1;
+	border-radius: 20px;
+	justify-content: center;
+	align-items: center; 
+	font-family: "Roboto", sans-serif;
+	font-weight: 600;
+	font-size: 2em;
+}
+
 #topBar {
-    display: flex;
-    margin: 5px;
+	display: flex;
+	height: 80px;
+	margin: 20px;
 }
-p {
-    margin: 0px;
-    padding: 0px;
-}
-html {
-    /* --primaryColor  */
-    --primary-color: #0f0f0f;
-    --seconde-color: #232323;  
-    --text-color: #dee2e6;  
-    --color-mode: night;  
-    
-    /* --primary-color: #dee2e6;
-    --seconde-color: #adb5bd;  
-    --text-color: #232323;   */
+
+#ppPlayerDiv {
+	display: flex;
+	padding: 10px;
+	border-radius: 20px;
+	background-color: #66E4EB;
+	
+	margin: 0px 20px 0px 20px;
+
 }
 
 #ppPlayer {
-    color : var(--text-color);
-    border-radius: 50%;
-    height: 80%;
-    width: 80%;
-    margin: 10px;
-    border: 0.3em var(--primary-color) solid;
-}
-
-#topBarName {
-    color : var(--text-color);
-    display: flex;
-    flex-direction: column;
-    background-color: var(--primary-color);
-    margin: 10px 10px 10px 10px;
-    padding: 0px 30px 0px 10px;
-    border-radius: 15px;
-    height: calc(100% - 20px);
-    
-}
-
-
-#topBarDivIn {
-    color : var(--text-color);
-    height: 10vh;
-    min-height: 100px;
-    margin: 10px 5px 10px 5px;
-    border-radius: 25px;
-}
-
-.btnTopBar {
-	background-color: var(--seconde-color);
-    border-radius: 15px;
-    margin: 10px 10px 10px 5px;
-    height: 100px;
-}
-
-.textTitleTopBar {
-    color : var(--text-color);
-    background-color: var(--primary-color);
-    margin: 10px 10px 10px 10px;
-    padding: 0px 30px 0px 10px;
-    border-radius: 15px;
-    height: calc(100% - 20px);
-    display: flex;
-    justify-content: center; /* Centrage horizontal */
-    align-items: center; /* Centrage vertical */
-    
-}
-
-.titleTopBar {
-    color : var(--text-color);
-    font-size: 3em;
-    margin: 10px 5px 10px 5px;
-	background-color: var(--seconde-color);
-    border-radius: 15px;
-    height: 100px;
+	background-color: red;	
+	border-radius: 50%;
+	border: solid 3px #232323 ;
 }

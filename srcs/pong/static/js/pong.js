@@ -389,7 +389,7 @@ function initKey() {
 }
 
 async function startSocket(reMatch) {
-    pong = new Pong("#ff5000", "#5f50f0", "#fff", 10, 8)
+    pong = new Pong("#66E4EB", "#B7F501", "#fff", 10, 8)
     ArrowUp = false
     ArrowDown = false
     KeyW = false

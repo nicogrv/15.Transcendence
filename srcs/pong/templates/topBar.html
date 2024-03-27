@@ -1,29 +1,29 @@
 {% load static %}
-<div id="homePage" style="display: none;">
+<div id="homePage" style="display: block;">
     <div id="topBar">
-        <div id="topBarDivIn" class="secondaryColor">
-            <img src="pong/static/img/poda.png" alt="" id="ppPlayer">
+        <div id="logoDiv">
+            PONG
         </div>
-        <div id="topBarDivIn" class="secondaryColor">
-            <div id="topBarName">
-                <div id="topBarNameTop">Element en haut</div>
-                <div id="topBarNameMidle">Top 15</div>
-                <div id="topBarNameBottom"></div>
-            </div>
+        <div id="ppPlayerDiv">
+            <img src="pong/static/img/poda.png" id="ppPlayer">
         </div>
-        <div class="col titleTopBar">
-            <div class="textTitleTopBar">
-                PongGame
-            </div>
-        </div>
-        <div class="btnTopBar">
+        <!-- <img src="pong/static/img/poda.png" alt="" id="ppPlayer"> -->
+        <!-- <div id="topBarName">
+            <div id="topBarNameTop">Element en haut</div>
+            <div id="topBarNameMidle">Top 15</div>
+            <div id="topBarNameBottom"></div>
+        </div> -->
+        <!-- <div class="textTitleTopBar">
+            PongGame
+        </div> -->
+        <!-- <div class="btnTopBar">
             <button class="btn-css" id="btn-DN">
                 L/N
             </button>
             <button class="btn-css" id="btn-Logout">
                 Logout
             </button>
-        </div>
+        </div> -->
     </div>
 </div>
 <script src="{% static 'js/homePage.js' %}"></script> 

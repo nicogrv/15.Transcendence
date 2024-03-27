@@ -1,0 +1,13 @@
+#pongGame {
+	width: fit-content;
+	border-radius: 20px;
+	height: 630px;
+	margin: 20px;
+	padding: 15px;
+	background-color: #EC83E5;
+}
+
+#pongCanvas{
+	border-radius: 10px;
+
+}
