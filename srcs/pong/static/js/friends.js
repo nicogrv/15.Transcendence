@@ -1,9 +1,11 @@
-searchFriends = document.getElementById('searchFriends')
-friends = document.getElementById('friends')
-buttonBlock = document.getElementById("buttonBlock")
-buttonAddFriend = document.getElementById("buttonAddFriend")
-
-
+var searchFriends = document.getElementById('searchFriends')
+var friends = document.getElementById('friends')
+var buttonBlock = document.getElementById("buttonBlock")
+var buttonAddFriend = document.getElementById("buttonAddFriend")
+var updateRealtionName = null
+var myModal = null
+buttonAddFriend.addEventListener('click', updateRealtionFriends)
+buttonBlock.addEventListener('click', updateRealtionBlock)
 
 
 searchFriends.addEventListener('input', function(e) {
@@ -21,21 +23,34 @@ searchFriends.addEventListener('input', function(e) {
 })
 
 
-function updateRealtion(name, relation) {
-		fetch(`http://127.0.0.1:8000/api/user/updateRelation/?user=${name}&relation=${relation}`)
-		.then(response => {
-			if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
-		.then(data => {
-			if ("ok" in data)
-			buttonBlock.removeEventListener('click', updateRealtion);
-			buttonAddFriend.removeEventListener('click', updateRealtion);
-			modalClick(name)
-		})
+function updateRealtionFriends() {
+	if (!updateRealtionName)
+		return
+	console.log("1 OK reload")
+	fetch(`http://127.0.0.1:8000/api/user/updateRelation/?user=${updateRealtionName}&relation=friends`)
+	.then(response => {
+		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
+	.then(data => {
+		if ("ok" in data)
+			modalClick()
+	})
+}
+
+function updateRealtionBlock() {
+	if (!updateRealtionName)
+		return
+	fetch(`http://127.0.0.1:8000/api/user/updateRelation/?user=${updateRealtionName}&relation=block`)
+	.then(response => {
+		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
+	.then(data => {
+		if ("ok" in data)
+			modalClick()
+	})
 }
 
 
-function modalClick(name) {
-	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayerOf/?username=${name}`)
+function modalClick() {
+	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayerOf/?username=${updateRealtionName}`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {
@@ -44,19 +59,11 @@ function modalClick(name) {
 			document.getElementById("ppPlayerModal").setAttribute('src', data.pic) 
 		else 
 			document.getElementById("ppPlayerModal").setAttribute('src', "pong/static/img/poda.png") 
-		document.getElementById('textModal').innerText = `
-		${data.elo} Elo (${data.victories}/${data.defeats})
+		document.getElementById('textModal').innerText = `${data.elo} Elo (${data.victories}/${data.defeats})
 		Relation me to him: ${data.relationMeHim}
 		Relation him to me: ${data.relationHimMe}
 		`;
-		buttonBlock.addEventListener('click', function() {
-			console.log(name, "block")
-			updateRealtion(name, "block");
-		});
-		buttonAddFriend.addEventListener('click', function() {
-			console.log(name, "friends")
-			updateRealtion(name, "friends");
-		});
+		myModal.show();
 	})
 }
 
@@ -72,9 +79,9 @@ socketSession.addEventListener("message", (event) => {
 			elem.innerText = jsonData[name]
 			console.log(`name ${jsonData[name]} ${elem}`)
 			elem.addEventListener("click", (e) => {
-				var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
-				myModal.show();
-				modalClick(jsonData[name])
+				myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+				updateRealtionName = jsonData[name] 
+				modalClick()
 			})
 			newFriends.appendChild(elem)
 		}

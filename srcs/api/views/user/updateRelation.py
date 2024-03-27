@@ -4,7 +4,7 @@ from pong.models.relation import Relation
 
 
 def updateRelation(req):
-
+	print("update")
 	try:
 		user = req.GET.get('user')
 		relationNeed = req.GET.get('relation')
@@ -40,5 +40,5 @@ def updateRelation(req):
 	except Exception as e:
 		print(f"ERROR: {e}")
 		return JsonResponse({"error": str(e)})
-
+	print("update 2")
 	return JsonResponse({"ok" : "ok"})
