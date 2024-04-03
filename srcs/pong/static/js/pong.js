@@ -58,7 +58,7 @@ class Pong {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#fff"; 
+        ctx.fillStyle = "#fff";
         ctx.font = '20px Arial';
         ctx.textBaseline = 'middle'
         ctx.textAlign = 'start';
@@ -408,7 +408,7 @@ async function startSocket(reMatch) {
        console.log("front")
     }
     console.log("back")
-    socket = new WebSocket(`ws://${window.location.hostname}/match/${token}`);
+    socket = new WebSocket(`ws://${window.location.host}/match/${token}`);
     pong.beforeGameMsg.push(`New socket`)
     socket.onerror = function(error) {
         stopSocketConnection = true

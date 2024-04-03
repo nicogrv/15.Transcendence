@@ -1,0 +1,57 @@
+{% load static %}
+<!-- <div id="friends" style="display: none;"> -->
+	<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+		<!-- Launch demo modal -->
+	<!-- </button> -->
+<!-- </div> -->
+<div style="color: whitesmoke;">
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+                    <h3>Search</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="textModal">
+                    <div id="leftModalSearch">
+                        <input id="searchFriends" type="text">
+                        <div id="usernameFriends">
+                            <div id="usernameFriendsDisplay"></div>
+                        </div>
+                    </div>
+                    <div class="vr"></div>
+                    <div id="modalPicNameStatus">
+                        <img src="pong/static/img/poda.png" id="modalPic">
+                        <h3 id="modalUsername">ngriveau</h3>
+                        <p id="modalStatus">● Online</p>
+                    </div>
+                <canvas id="myChart" width="400" height="400"></canvas>
+                
+                
+                
+                
+                
+                
+                </div>
+
+
+
+
+
+
+                <div class="modal-footer">
+                    <button type="button" id="buttonAddFriend" class="btn btn-GentleGreen">AddFriend</button>
+						<button type="button" id="buttonBlock" class="btn btn-GentlePink">Block</button>
+						<button type="button" class="btn btn-red" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/search.js' %}"></script>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>

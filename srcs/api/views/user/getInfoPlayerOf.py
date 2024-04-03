@@ -16,13 +16,9 @@ def getInfoPlayerOf(req):
         him = Player.objects.filter(username=username)
         if (me.count() != 1 or him.count() != 1):
             return JsonResponse({"error": "error"})
-        print("iciiiii")
         relation1 = Relation.objects.filter(uid_user_one=me[0].uid, uid_user_two=him[0].uid)
-        print("iciiiii1")
         relation2 = Relation.objects.filter(uid_user_one=him[0].uid, uid_user_two=me[0].uid)
-        print("iciiiii2")
         if (int(relation1.count()) + int(relation2.count()) == 0):
-            print("pas en amis !!!")
             relation = Relation(uid_user_one=me[0], uid_user_two=him[0])
             relation.save()
             data['relationMeHim'] = relation.getRelationOneToTwo()

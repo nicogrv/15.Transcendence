@@ -11,7 +11,7 @@ function getCookie(name) {
 
 let cookie = getCookie("PongToken");
 
-const socketSession = new WebSocket(`ws://${window.location.hostname}/socketSession/${cookie}`);
+const socketSession = new WebSocket(`ws://${window.location.host}/socketSession/${cookie}`);
 
 console.log('COUCOU')
 socketSession.addEventListener("open", (event) => {
