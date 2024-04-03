@@ -77,8 +77,6 @@ function logoutbtn(e){
 
 function fillDataInPage(data) {
 	
-	document.getElementById('pongGame').style.display = 'block';
-	document.getElementById('friends').style.display = 'block';
 	document.getElementById('homePage').style.display = 'block';
 	if (data.pic)
 		document.getElementById('ppPlayer').setAttribute("src", data.pic)

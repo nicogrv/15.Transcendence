@@ -48,6 +48,7 @@ function updateRealtionBlock() {
 }
 
 
+
 function modalClick() {
 	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayerOf/?username=${updateRealtionName}`)
 	.then(response => {
@@ -97,43 +98,86 @@ socketSession.addEventListener("message", (event) => {
 
 
 
-//   var ctx = document.getElementById('myChart').getContext('2d');
-//     var myChart = new Chart(ctx, {
-//         type: 'line',
-//         data: {
-//             labels: "test",
-//             datasets: [{
-//                 label: 'Valeurs',
-//                 data: {{ values|safe }},
-//                 fill: false,
-//                 borderColor: 'rgb(75, 192, 192)',
-//                 tension: 0.1
-//             }]
-//         },
-//         options: {
-//             scales: {
-//                 x: {
-//                     type: 'time',
-//                     time: {
-//                         parser: 'YYYY-MM-DD HH:mm',
-//                         tooltipFormat: 'll HH:mm',
-//                         unit: 'hour',
-//                         displayFormats: {
-//                             hour: 'HH:mm'
-//                         }
-//                     },
-//                     title: {
-//                         display: true,
-//                         text: 'Date et heure'
-//                     }
-//                 },
-//                 y: {
-//                     beginAtZero: true,
-//                     title: {
-//                         display: true,
-//                         text: 'Valeurs'
-//                     }
-//                 }
-//             }
-//         }
-//     });
+  function formatTimestamp(timestamp) {
+	// Convertir l'horodatage en objet Date
+	var dt_object = new Date(timestamp);
+  
+	// Fonction pour ajouter un zéro en tête si nécessaire
+	function padZero(num) {
+	  return (num < 10 ? '0' : '') + num;
+	}
+  
+	// Extraire les éléments de temps
+	var time_hour = padZero(dt_object.getUTCHours());
+	var time_minute = padZero(dt_object.getUTCMinutes());
+	var time_second = padZero(dt_object.getUTCSeconds());
+  
+	// Extraire les éléments de date
+	var date_day = padZero(dt_object.getUTCDate());
+	var date_month = padZero(dt_object.getUTCMonth() + 1); // Mois commence à 0
+	var date_year = padZero(dt_object.getUTCFullYear() % 100); // Obtenir les deux derniers chiffres de l'année
+  
+	// Formater dans le format requis
+	var formatted_datetime = time_hour + ":" + time_minute + " " + date_day + "/" + date_month + "/" + date_year;
+  
+	return formatted_datetime;
+  }
+
+
+
+function makePointShart() {
+	fetch(`${window.location.origin}/api/user/getPointWithDate`)
+	.then(response => {
+		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
+	.then(data => {
+		var labels = [];
+		var values = [];
+		data.ok.forEach(function(item) {
+			var timestamp = Object.keys(item)[0];
+			var value = item[timestamp];
+			timestamp = formatTimestamp(timestamp)
+			if (!labels.includes(timestamp)) {
+				labels.push(timestamp);
+				console.log()
+				if (values.length > 0)
+					values.push(parseInt(values[values.length -1]) + parseInt(value))
+				else 
+					values.push(parseInt(value))
+			}
+		});
+		new Chart(document.getElementById('myChart').getContext('2d'), {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Point in game',
+					data: values,
+					fill: true,
+					borderColor: 'rgb(255, 255, 255)',
+					tension: 0.3
+				}]
+			},
+			options: {
+				responsive: false, // pour désactiver la réactivité
+				scales: {
+					x: {
+						title: {
+							display: true,
+							text: 'Date'
+						}
+					},
+					y: {
+						beginAtZero: true,
+						title: {
+							display: true,
+							text: 'Point'
+						}
+					}
+				}
+			}
+		});
+	})
+}
+
+
+makePointShart()
