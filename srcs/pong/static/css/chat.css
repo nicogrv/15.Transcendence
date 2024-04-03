@@ -2,9 +2,15 @@
 	display: flex;
 }
 
-#chat {
-	margin: 20px;
+#chatSeachDiv {
+	display: flex;
+	flex-direction: column;
 	width: 400px;
+}
+
+#chat {
+	flex: 1;
+	margin: 0px 20px 20px 20px;
 	background-color: var(--seconde-color);
 	border-radius: 20px;	
 }

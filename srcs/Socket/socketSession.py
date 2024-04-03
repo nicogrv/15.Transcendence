@@ -6,6 +6,7 @@ from django.db.models.functions import Length
 class SocketSession(WebsocketConsumer):
 	def connect(self):
 		self.accept()
+		self.player = None
 		self.uidPlayer = self.scope['url_route']['kwargs']['tokenLogin']
 		print(self.uidPlayer)
 		try:
@@ -14,12 +15,11 @@ class SocketSession(WebsocketConsumer):
 			self.player.status = 1
 			self.player.save()
 		except Exception as e:
-			print(f"ERREUR NICO: {e}")
+			print(f"error socket session: {e}")
 			pass
-		print("OK")
 
 	def disconnect(self, close_code):
-		if self.player:
+		if self.player is not None:
 			self.player.status = 0
 			self.player.save()
 		pass

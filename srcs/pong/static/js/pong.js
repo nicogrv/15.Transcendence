@@ -389,7 +389,10 @@ function initKey() {
 }
 
 async function startSocket(reMatch) {
-    pong = new Pong("var(--primary-color);", "var(--third-color);", "#fff", 10, 8)
+    let r = document.querySelector(':root')
+    
+    
+    pong = new Pong(console.log(getComputedStyle(r).getPropertyValue('--primary-color')), console.log(getComputedStyle(r).getPropertyValue('--seconde-color')), "#fff", 10, 8)
     ArrowUp = false
     ArrowDown = false
     KeyW = false

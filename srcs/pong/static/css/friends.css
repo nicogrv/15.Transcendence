@@ -1,9 +1,14 @@
+#friendAndLogoutBtn {
+	display: flex;
+	flex-direction: column;
+}
+
 #friends {
 	margin: 20px;
 	width: 200px;
 	background-color: var(--seconde-color);
 	border-radius: 20px;	
-	height: 500px;
+	flex :1;
 }
 
 #friendsTitle {
