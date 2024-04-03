@@ -27,7 +27,7 @@ function updateRealtionFriends() {
 	if (!updateRealtionName)
 		return
 	console.log("1 OK reload")
-	fetch(`http://127.0.0.1:8000/api/user/updateRelation/?user=${updateRealtionName}&relation=friends`)
+	fetch(`${window.location.origin}/api/user/updateRelation/?user=${updateRealtionName}&relation=friends`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {
@@ -39,7 +39,7 @@ function updateRealtionFriends() {
 function updateRealtionBlock() {
 	if (!updateRealtionName)
 		return
-	fetch(`http://127.0.0.1:8000/api/user/updateRelation/?user=${updateRealtionName}&relation=block`)
+	fetch(`${window.location.origin}/api/user/updateRelation/?user=${updateRealtionName}&relation=block`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {
@@ -50,7 +50,7 @@ function updateRealtionBlock() {
 
 
 function modalClick() {
-	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayerOf/?username=${updateRealtionName}`)
+	fetch(`${window.location.origin}/api/user/getInfoPlayerOf/?username=${updateRealtionName}`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {

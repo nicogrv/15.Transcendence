@@ -33,7 +33,7 @@ signUpForm.addEventListener('submit', function(e) {
     else if (password != confirmPassword) 
         return createAlerte('Password and confirm password are not shown', 5000);
     else {
-         fetch(`http://127.0.0.1:8000/api/auth/signUp/?username=${username}&email=${email}&password=${password}`)
+         fetch(`${window.location.origin}/api/auth/signUp/?username=${username}&email=${email}&password=${password}`)
         .then(response => {
             if (!response.ok) {createAlerte('La requête a échoué');}return response.json(); })
         .then(data => {

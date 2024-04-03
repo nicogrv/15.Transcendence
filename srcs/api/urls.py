@@ -8,7 +8,7 @@ from .views.user import updateStatPlayer
 from .views.pong import getIdMatch
 from .views.user import getInfoPlayerOf
 from .views.user import updateRelation
-
+from .views.user import getRanking
 
 import os
 
@@ -23,6 +23,7 @@ urlpatterns = [
     path('user/getInfoPlayerOf/', getInfoPlayerOf.getInfoPlayerOf),
     path('user/updateRelation/', updateRelation.updateRelation),
     path('user/updateStatPlayer/<str:PongToken>', updateStatPlayer.updateStatPlayer),
+    path('user/getRanking', getRanking.getRanking),
 
     path('pong/getIdMatch/<str:UserToken>', getIdMatch.getIdMatch),
     

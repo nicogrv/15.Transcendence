@@ -22,7 +22,7 @@ signInForm.addEventListener('submit', function(e) {
     else if (password === '') 
         return createAlerte('password is required', 5000);
     console.log("fetchhhh");
-    fetch(`http://127.0.0.1:8000/api/auth/signIn/?username=${username}&password=${password}`)
+    fetch(`${window.location.origin}/api/auth/signIn/?username=${username}&password=${password}`)
     .then(response => {
         console.log("ICI")
         if (!response.ok) {createAlerte('La requête a échoué');}return response.json(); })

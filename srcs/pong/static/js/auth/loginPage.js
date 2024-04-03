@@ -60,7 +60,7 @@ if (messageQuery)
 }
 else if (queryValueCode && !token) { // if no token and have code of 42LoginPage, send at api to create and hang the token in nav
     document.getElementById("titlePage").innerText = "Connection"
-    fetch(`http://127.0.0.1:8000/api/auth/authWithFortyTwo?code=${queryValueCode}`)
+    fetch(`${window.location.origin}/api/auth/authWithFortyTwo?code=${queryValueCode}`)
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
     .then(data => {
@@ -79,7 +79,7 @@ else if (!token) {
 else { // display info homePage if login
     document.getElementById("titlePage").innerText = "Pong"
     document.body.appendChild(document.createElement('p'));
-    fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer`)   
+    fetch(`${window.location.origin}/api/user/getInfoPlayer`)   
     .then(response => {
         if (!response.ok) {throw new Error('La requête a échoué');}return response.json(); })
     .then(data => {
@@ -92,7 +92,7 @@ else { // display info homePage if login
         // if (data.pic)
         //     img.setAttribute("src", data.pic)
         // else
-        //     img.setAttribute("src", "http://127.0.0.1:8000/static/img/poda.png")
+        //     img.setAttribute("src", "${window.location.origin}/static/img/poda.png")
     // var button = document.createElement('button');
     // button.textContent = 'Delete Token';
     // button.className = 'btn-css btn-GentleGreen';

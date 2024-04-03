@@ -392,7 +392,8 @@ async function startSocket(reMatch) {
     let r = document.querySelector(':root')
     
     
-    pong = new Pong(console.log(getComputedStyle(r).getPropertyValue('--primary-color')), console.log(getComputedStyle(r).getPropertyValue('--seconde-color')), "#fff", 10, 8)
+    // pong = new Pong((getComputedStyle(r).getPropertyValue('--primary-color')), (getComputedStyle(r).getPropertyValue('--seconde-color')), "#fff", 10, 8)
+    pong = new Pong("#ff0000", "#0000ff", "#fff", 10, 8)
     ArrowUp = false
     ArrowDown = false
     KeyW = false
@@ -407,7 +408,7 @@ async function startSocket(reMatch) {
        console.log("front")
     }
     console.log("back")
-    socket = new WebSocket(`ws://127.0.0.1:8000/match/${token}`);
+    socket = new WebSocket(`ws://${window.location.hostname}/match/${token}`);
     pong.beforeGameMsg.push(`New socket`)
     socket.onerror = function(error) {
         stopSocketConnection = true

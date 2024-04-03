@@ -43,7 +43,7 @@ function logoutbtn(e){
 
 // function updateStat(){
 // 	console.log("update")
-// 	fetch(`http://127.0.0.1:8000/api/user/updateStatPlayer/${token}`)
+// 	fetch(`${window.location.origin}/api/user/updateStatPlayer/${token}`)
 // 	.then(response => {
 // 		if (!response.ok) {throw new Error('La requête a échoué')} return response.json(); })
 // 	.then(data => {
@@ -90,7 +90,7 @@ function fillDataInPage(data) {
 var token = getCookie('PongToken')
 
 if (token) {
-	fetch(`http://127.0.0.1:8000/api/user/getInfoPlayer`)
+	fetch(`${window.location.origin}/api/user/getInfoPlayer`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 		.then(data => {

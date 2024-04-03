@@ -15,7 +15,7 @@ def getInfo(req):
 			'client_id': client_id,
 			'client_secret': client_secret,
 			'code': code,
-			'redirect_uri': 'http://127.0.0.1:8000/'
+			'redirect_uri': 'http://127.0.0.1:8000'
 		}
 		response = requests.post(url, data=data)
 		data = response.json()
