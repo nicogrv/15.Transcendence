@@ -97,36 +97,24 @@ socketSession.addEventListener("message", (event) => {
   });
 
 
-
+  function padZero(num) {
+	return (num < 10 ? '0' : '') + num;
+  }
   function formatTimestamp(timestamp) {
-	// Convertir l'horodatage en objet Date
 	var dt_object = new Date(timestamp);
-  
-	// Fonction pour ajouter un zéro en tête si nécessaire
-	function padZero(num) {
-	  return (num < 10 ? '0' : '') + num;
-	}
-  
-	// Extraire les éléments de temps
+	var time_sec = padZero(dt_object.getUTCSeconds());
 	var time_hour = padZero(dt_object.getUTCHours());
 	var time_minute = padZero(dt_object.getUTCMinutes());
-	var time_second = padZero(dt_object.getUTCSeconds());
-  
-	// Extraire les éléments de date
 	var date_day = padZero(dt_object.getUTCDate());
-	var date_month = padZero(dt_object.getUTCMonth() + 1); // Mois commence à 0
-	var date_year = padZero(dt_object.getUTCFullYear() % 100); // Obtenir les deux derniers chiffres de l'année
-  
-	// Formater dans le format requis
-	var formatted_datetime = time_hour + ":" + time_minute + " " + date_day + "/" + date_month + "/" + date_year;
-  
-	return formatted_datetime;
+	var date_month = padZero(dt_object.getUTCMonth() + 1);
+	var date_year = padZero(dt_object.getUTCFullYear() % 100); 
+	return time_hour + ":" + time_minute + ":" + time_sec + " " + date_day + "/" + date_month + "/" + date_year;
   }
 
 
 
-function makePointShart() {
-	fetch(`${window.location.origin}/api/user/getPointWithDate`)
+function makePointShart(Title, Color, TextY, apiUrl, canva, snowBallData) {
+	fetch(`${window.location.origin}${apiUrl}`)
 	.then(response => {
 		if (!response.ok) {throw new Error('La requête a échoué');} return response.json(); })
 	.then(data => {
@@ -138,27 +126,27 @@ function makePointShart() {
 			timestamp = formatTimestamp(timestamp)
 			if (!labels.includes(timestamp)) {
 				labels.push(timestamp);
-				console.log()
-				if (values.length > 0)
+				console.log(value, timestamp)
+				if (values.length > 0 && snowBallData)
 					values.push(parseInt(values[values.length -1]) + parseInt(value))
 				else 
 					values.push(parseInt(value))
 			}
 		});
-		new Chart(document.getElementById('myChart').getContext('2d'), {
+		new Chart(canva, {
 			type: 'line',
 			data: {
 				labels: labels,
 				datasets: [{
-					label: 'Point in game',
+					label: Title,
 					data: values,
 					fill: true,
-					borderColor: 'rgb(255, 255, 255)',
-					tension: 0.3
+					borderColor: Color,
+					tension: 0
 				}]
 			},
 			options: {
-				responsive: false, // pour désactiver la réactivité
+				responsive: false,
 				scales: {
 					x: {
 						title: {
@@ -170,7 +158,7 @@ function makePointShart() {
 						beginAtZero: true,
 						title: {
 							display: true,
-							text: 'Point'
+							text: TextY
 						}
 					}
 				}
@@ -179,5 +167,5 @@ function makePointShart() {
 	})
 }
 
-
-makePointShart()
+makePointShart('Point in game', 'rgb(255, 255, 255)', "Point",  "/api/user/getPointWithDate", document.getElementById('pointChart').getContext('2d'), true)
+makePointShart('Elo', 'rgb(255, 255, 255)', "Elo",  "/api/user/getEloWithDate", document.getElementById('eloChart').getContext('2d'), false)

@@ -19,6 +19,7 @@ def getPointWithDate(req):
             raise Exception("No cookie")
     except Exception as e:
         return JsonResponse({"error": str(e)})
+    print(f"nb d elem: {matchsOne.count() + matchsTwo.count()}")
     for match in matchsOne:
         data.append({match.ended_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ') : match.points_player_one})
     for match in matchsTwo:

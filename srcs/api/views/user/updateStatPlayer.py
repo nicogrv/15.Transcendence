@@ -3,6 +3,7 @@ from pong.models.player import Player
 from pong.models.match import Match
 
 def updateStatPlayer(req, PongToken):
+	print("update ?????????????????????????????????????????????/")
 	playersCheck = Player.objects.filter(token_login=PongToken)
 	if (playersCheck.count() != 1):
 		print("ERROR")
@@ -29,10 +30,16 @@ def updateStatPlayer(req, PongToken):
 	player.victories = win
 	player.defeats = loose
 	elo = ((win * 5) + point) - (loose * 5)
-	if (elo < 0):
-		player.elo = 0
-	else:
-		player.elo = elo
+	# if (elo < 0):
+	# 	player.elo = 0
+	# else:
+	print({
+        "win": win,
+        "loose": loose,
+        "point": point,
+        "elo": elo
+    })
+	player.elo = elo
 	player.save()
 	return JsonResponse({
         "win": win,

@@ -2,7 +2,7 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 from pong.models.player import Player
 from django.db.models.functions import Length
-
+import requests
 class SocketSession(WebsocketConsumer):
 	def connect(self):
 		self.accept()
@@ -21,6 +21,7 @@ class SocketSession(WebsocketConsumer):
 	def disconnect(self, close_code):
 		if self.player is not None:
 			self.player.status = 0
+			# requests.get(f"http://127.0.0.1:8000/api/user/updateStatPlayer/{self.player.getToken_login()}")
 			self.player.save()
 		pass
 
