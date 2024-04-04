@@ -18,7 +18,7 @@ def getEloWithDate(req):
         else:
             raise Exception("No cookie")
     except Exception as e:
-        return JsonResponse({"error": str(e)})
+        return JsonResponse({"error": str(e)}, status=500)
     for match in matchsOneWin:
         data.append([{"date" : match.ended_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),"point":match.points_player_one,"win" : True}])
     for match in matchsTwoWin:

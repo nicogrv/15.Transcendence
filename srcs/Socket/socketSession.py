@@ -1,8 +1,10 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from pong.models.player import Player
+from api.views.user.updateStatPlayer import updateStatPlayer
 from django.db.models.functions import Length
-import requests
+import asyncio
+
 class SocketSession(WebsocketConsumer):
 	def connect(self):
 		self.accept()
@@ -11,7 +13,7 @@ class SocketSession(WebsocketConsumer):
 		print(self.uidPlayer)
 		try:
 			self.player = Player.objects.get(token_login=self.uidPlayer)
-			print(self.player)
+			asyncio.create_task(updateStatPlayer(None, self.player.getToken_login()))
 			self.player.status = 1
 			self.player.save()
 		except Exception as e:
@@ -21,7 +23,7 @@ class SocketSession(WebsocketConsumer):
 	def disconnect(self, close_code):
 		if self.player is not None:
 			self.player.status = 0
-			# requests.get(f"http://127.0.0.1:8000/api/user/updateStatPlayer/{self.player.getToken_login()}")
+			asyncio.create_task(updateStatPlayer(None, self.player.getToken_login()))
 			self.player.save()
 		pass
 
