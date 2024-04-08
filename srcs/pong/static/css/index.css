@@ -12,7 +12,6 @@ body {
 	font-family: "Roboto", sans-serif;
 	font-weight: 500;
 	background-color: var(--background-color);
-	background-image: url("https://cdn.dribbble.com/users/1655585/screenshots/3455516/media/1cac47dfadfdac8d93fde36d6540d283.gif");
 	background-size: cover;
     /* position: fixed; */
     width: 100%;
@@ -20,6 +19,15 @@ body {
     color : #d3d3d3;
 
 }
+
+
+.glass{
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 5px;
+    border:1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);}
 
 #loginPage {
 	height: 100%;
