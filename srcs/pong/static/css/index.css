@@ -1,6 +1,34 @@
+@font-face {
+    font-family: '1';
+    src: url("../font/FuturaCyrillicHeavy.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: '2';
+    src: url("../font/BurbankBigRegularBlack.otf") format('truetype');
+}
+
+@font-face {
+    font-family: '3';
+    src: url("../font/Stara-Bold.otf") format('truetype');
+}
+
+@font-face {
+    font-family: '4';
+    src: url("../font/Valorant\ Font.ttf") format('truetype');
+}
+
+@font-face {
+    font-family: '5';
+    src: url("../font/minecraft-enchantment.ttf") format('truetype');
+}
+
+
 
 
 body {
+	/* font-size: 1em; */
+	font-family: "2";
 	--primary-color: #66E4EB;
 	--seconde-color: #EC83E5;
 	--third-color: #CBFA0A;
@@ -9,8 +37,6 @@ body {
 	--third-color: #F3FBFC;
 	--background-color: #F3FBFC;
 	--background-color: #1B1B1B;
-	font-family: "Roboto", sans-serif;
-	font-weight: 500;
 	background-color: var(--background-color);
 	background-size: cover;
     /* position: fixed; */
@@ -46,11 +72,12 @@ hr {
 	background-color: var(--seconde-color);
 }
 
-
+.divSignInUp42 {
+	display: flex;
+	flex-direction: column;
+}
 
 .divSignInUp42-flex {
-    color : var(--text-color);
-	background-color: var(--seconde-color);
 	position: fixed;
 	border-radius: 25px; 
 	top: 50%;
@@ -59,8 +86,6 @@ hr {
 	display: flex;
 }
 .form-containerGreen {
-    color : var(--text-color);
-	background-color: var(--primary-color); 
 	margin: 20px 10px 10px 20px;
 	width: 300px; 
 	height: 300px; 
@@ -69,8 +94,6 @@ hr {
 }
 
 .form-containerPink {
-    color : var(--text-color);
-	background-color: var(--primary-color); 
 	margin: 20px 20px 20px 10px;
 	width: 300px; 
 	box-sizing: border-box;
@@ -78,11 +101,19 @@ hr {
 	border-radius: 16px; 
 }
 
-.btnLog42 {
-	background-color: var(--primary-color);
+
+
+.divBtnLog42 {
+
 	margin: 20px 10px 20px 20px;
-	width: 300px; 
+	flex: 1;
 	height:min-content;
 	padding: 20px;
-	 border-radius: 12px; 
+	border-radius: 12px; 
+}
+
+#btnLog42 {
+	height: 100%;
+	justify-content: center;
+	align-items: center;
 }

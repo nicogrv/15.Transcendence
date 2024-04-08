@@ -103,14 +103,12 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-bottom: solid;
 }
 
 .meHistoryWin {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-bottom: solid;
 }
 
 .meHistoryLoose{
@@ -118,5 +116,4 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;	
-	border-bottom: solid;
 }

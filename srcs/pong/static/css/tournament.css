@@ -1,9 +1,12 @@
 #tournament {
-	 border-radius: 12px;
+	border-radius: 12px;
 	margin: 20px;
 	flex:1;
 	
-  
-
-
+}
+#tournamentTitle{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom: solid var(--background-color);
 }
