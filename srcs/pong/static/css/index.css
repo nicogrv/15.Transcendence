@@ -20,14 +20,15 @@ body {
 
 }
 
+hr {
+	margin: 2px 0px 2px 0px;
+}
 
 .glass{
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 5px;
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.85), rgba(30, 30, 30, 0.85));
     border:1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);}
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
 
 #loginPage {
 	height: 100%;
@@ -64,7 +65,7 @@ body {
 	width: 300px; 
 	height: 300px; 
 	padding: 20px;
-	border-radius: 15px; 
+	 border-radius: 12px; 
 }
 
 .form-containerPink {
@@ -83,5 +84,5 @@ body {
 	width: 300px; 
 	height:min-content;
 	padding: 20px;
-	border-radius: 15px; 
+	 border-radius: 12px; 
 }

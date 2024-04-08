@@ -15,7 +15,7 @@
   
 
 
-	border-radius: 20px;	
+	   border-radius: 12px;	
 }
 
 #chatTitle {
@@ -27,7 +27,7 @@
 }
 
 #selectChatUser {
-	border-radius: 15px;
+	 border-radius: 12px;
 	margin: 20px;
 	flex:1;
 	

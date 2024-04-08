@@ -8,10 +8,7 @@
 	margin: 20px;
 	width: 300px;
 	border-radius: 41px;
-	background: #e0e0e0;
-		
-/* ici */
-	border-radius: 20px;	
+	   border-radius: 12px;	
 	height: 500px;
 }
 
@@ -24,7 +21,7 @@
 }
 
 #selectChatUser {
-	border-radius: 15px;
+	 border-radius: 12px;
 	margin: 20px;
 	background-color: var(--third-color);
 	height: 80px;

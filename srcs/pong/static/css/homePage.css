@@ -1,7 +1,7 @@
 #logoDiv {
 	  	display: flex;
 	flex: 1;
-	border-radius: 20px;
+	   border-radius: 12px;
 	justify-content: center;
 	align-items: center; 
 	font-family: "Roboto", sans-serif;
@@ -18,7 +18,7 @@
 #ppPlayerDiv {
 	display: flex;
 	padding: 10px;
-	border-radius: 20px;
+	   border-radius: 12px;
 	
   
 

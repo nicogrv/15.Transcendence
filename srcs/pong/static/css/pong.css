@@ -4,36 +4,28 @@
 
 #pongGame {
 	width: fit-content;
-	border-radius: 20px;
+	border-radius: 12px;
 	height: 630px;
 	margin: 20px 0px 20px 0px;
 	padding: 15px;
-	
-	 
-
-
 	display: flex;
 	flex: 1;
-	border-radius: 20px;
+	border-radius: 12px;
 	justify-content: center;
 	align-items: center; 
 }
 
 #pongCanvas{
-	border-radius: 10px;
+	border-radius: 12px;
 }
 
 #opponentsData {
-	border-radius: 20px;
+	border-radius: 12px;
 	height: fit-content;
 	display: flex;
 	margin: 20px;
 	height: 80px;
 	padding: 10px;
-	
-  
-
-
 	align-items: center;
 }
 
@@ -59,48 +51,27 @@
 	display: flex;
 	flex-direction: column;
 	flex:1 ;
-	border-radius: 15px;
+	border-radius: 12px;
 	margin: 0px 20px 20px 20px;
-	
-  
-
-
-	/* background-color: var(--primary-color);; */
 }
 
 .opponentsHistoryTitle {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-bottom: solid;
 }
 
 .opponentsHistoryWin {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border-bottom: solid;
 }
 
 .opponentsHistoryLoose{
 	display: flex;
 	flex-direction: column;
 	align-items: center;	
-	border-bottom: solid;
 }
-
-#opponentsHistoryLooseEnd{
-	flex: 1;
-
-	border-radius: 0px 0px 15px 15px ;
-}
-
-#opponentsHistoryWinEnd{
-	flex: 1;
-
-	border-radius: 0px 0px 15px 15px ;
-}
-
 
 
 
@@ -119,7 +90,7 @@
 	display: flex;
 	flex-direction: column;
 	flex:1 ;
-	border-radius: 15px;
+	 border-radius: 12px;
 	margin: 0px 20px 20px 20px;
 	
   
@@ -149,15 +120,3 @@
 	align-items: center;	
 	border-bottom: solid;
 }
-
-#meHistoryLooseEnd{
-	padding: 0px 10px 0px 10px;
-	flex: 1;	
-	border-radius: 0px 0px 15px 15px ;
-}
-
-#meHistoryWinEnd{
-	flex: 1;
-	border-radius: 0px 0px 15px 15px ;
-}
-
