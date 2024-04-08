@@ -8,7 +8,11 @@
 	height: 630px;
 	margin: 20px 0px 20px 0px;
 	padding: 15px;
-	background-color: var(--seconde-color);;
+	
+background: rgba(71, 71, 71, 0.24);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);border: 1px solid rgba(71, 71, 71, 0.3);
+
+
+
 	display: flex;
 	flex: 1;
 	border-radius: 20px;
@@ -27,7 +31,11 @@
 	margin: 20px;
 	height: 80px;
 	padding: 10px;
-	background-color: var(--primary-color);;
+	
+background: rgba(71, 71, 71, 0.24);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);border: 1px solid rgba(71, 71, 71, 0.3);
+
+
+
 	align-items: center;
 }
 
@@ -55,6 +63,11 @@
 	flex:1 ;
 	border-radius: 15px;
 	margin: 0px 20px 20px 20px;
+	
+background: rgba(71, 71, 71, 0.24);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);border: 1px solid rgba(71, 71, 71, 0.3);
+
+
+
 	/* background-color: var(--primary-color);; */
 }
 
@@ -62,7 +75,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: var(--primary-color);;
 	border-bottom: solid;
 }
 
@@ -70,7 +82,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: var(--third-color);
 	border-bottom: solid;
 }
 
@@ -79,20 +90,17 @@
 	flex-direction: column;
 	align-items: center;	
 	border-bottom: solid;
-	background-color: var(--seconde-color);
 }
 
 #opponentsHistoryLooseEnd{
 	flex: 1;
-	background: var(--seconde-color);
-	background: linear-gradient(180deg, var(--seconde-color) 0%, rgba(237,133,230,0) 105%);
+
 	border-radius: 0px 0px 15px 15px ;
 }
 
 #opponentsHistoryWinEnd{
 	flex: 1;
-	background: var(--third-color);
-	background: linear-gradient(180deg, var(--third-color) 0%, rgba(183,245,1,0) 105%);
+
 	border-radius: 0px 0px 15px 15px ;
 }
 
@@ -116,6 +124,11 @@
 	flex:1 ;
 	border-radius: 15px;
 	margin: 0px 20px 20px 20px;
+	
+background: rgba(71, 71, 71, 0.24);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(5px);border: 1px solid rgba(71, 71, 71, 0.3);
+
+
+
 	/* background-color: var(--primary-color);; */
 }
 
@@ -123,7 +136,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: var(--primary-color);;
 	border-bottom: solid;
 }
 
@@ -131,7 +143,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: var(--third-color);;
 	border-bottom: solid;
 }
 
@@ -141,21 +152,16 @@
 	flex-direction: column;
 	align-items: center;	
 	border-bottom: solid;
-	background-color: var(--seconde-color);;
 }
 
 #meHistoryLooseEnd{
 	padding: 0px 10px 0px 10px;
 	flex: 1;	
-	background: var(--seconde-color);
-	background: linear-gradient(180deg, var(--seconde-color) 0%, rgba(237,133,230,0) 105%);
 	border-radius: 0px 0px 15px 15px ;
 }
 
 #meHistoryWinEnd{
 	flex: 1;
-	background: var(--third-color);
-	background: linear-gradient(180deg, var(--third-color) 0%, rgba(183,245,1,0) 105%);
 	border-radius: 0px 0px 15px 15px ;
 }
 

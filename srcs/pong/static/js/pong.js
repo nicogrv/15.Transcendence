@@ -56,9 +56,8 @@ class Pong {
     
     beforeGameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#fff";
+        ctx.fillStyle = "#f00";
         ctx.font = '20px Arial';
         ctx.textBaseline = 'middle'
         ctx.textAlign = 'start';
@@ -107,7 +106,6 @@ class Pong {
             this.draw(lPad, rPad, ball)
             if (this.lPoint > 2 || this.rPoint > 2) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'black';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = 'white'; 
                 ctx.font = '124px Arial';
@@ -137,7 +135,7 @@ class Pong {
                 ctx.fillStyle = 'gray'; 
                 ctx.font = '80px Arial';
                 ctx.fillText(`${this.lPoint}:${this.rPoint}`, canvas.width/2, canvas.height/3*2); 
-                ctx.fillStyle = 'black'
+                // ctx.fillStyle = 'black'
                 if (this.updateStat) {
                     setTimeout(function() {
                         document.getElementById("topBarName").setAttribute("needupdate", "true")

@@ -3,16 +3,21 @@
 body {
 	--primary-color: #66E4EB;
 	--seconde-color: #EC83E5;
-	--third-color: #CBFA0A	;
-	--primary-color: #72bfa1; 
-	 --seconde-color: #72bfa1;
-	--third-color: #72bfa1	; 
+	--third-color: #CBFA0A;
+	--primary-color: #F3FBFC; 
+	 --seconde-color: #adf133;
+	--third-color: #F3FBFC;
 	--background-color: #F3FBFC;
 	--background-color: #1B1B1B;
 	font-family: "Roboto", sans-serif;
 	font-weight: 500;
 	background-color: var(--background-color);
-    color : var(--background-color);
+	background-image: url("https://cdn.dribbble.com/users/1655585/screenshots/3455516/media/1cac47dfadfdac8d93fde36d6540d283.gif");
+	background-size: cover;
+    /* position: fixed; */
+    width: 100%;
+    height: 100%;
+    color : #d3d3d3;
 
 }
 
