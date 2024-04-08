@@ -5,24 +5,17 @@
     margin: 20px;
      border-radius: 12px;
     height: 40px;
-    
-  
-
 
 }
-.modal-header {
-    margin: 10px;
-}
-
-.modal-body{
-    display: flex;
-}
-
 #leftModalSearch{
     display: flex;
     flex-direction: column;
     width: 20%;
     margin-right: 16px;
+}
+
+#bodySearch {
+    display: flex;
 }
 
 
@@ -31,6 +24,17 @@
     padding:0px;
     margin-bottom: 16px;
     /* width: 200px; */
+}
+
+#searchDiv {
+    margin: 20px;
+    border-radius: 12px;
+}
+
+#titleSearchDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #usernameFriends {

@@ -49,15 +49,13 @@ class Pong {
         lPad.s = speedPadle
         ball.s = speedBall
         ctx.fillStyle = '#0f0f0f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         this.gameLoop(0, rPad, lPad, ball);
     }
 
     
     beforeGameLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#f00";
+        ctx.fillStyle = "#fff";
         ctx.font = '20px Arial';
         ctx.textBaseline = 'middle'
         ctx.textAlign = 'start';
@@ -72,7 +70,6 @@ class Pong {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // color background
         ctx.fillStyle = '#0f0f0f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         // display point
         ctx.fillStyle = lPad.color; 
         ctx.font = '124px Arial';

@@ -1,105 +1,83 @@
 {% load static %}
 <div id="bodySite">
-	<div id="opponentsDataHistory">
-		<div id="opponentsData" class="glass">
-			<img src="pong/static/img/poda.png" id="opponentsDataPp">
-			<div id="opponentsDataText">
-				<div id="opponentsDataName">ngriveau #15</div>
-				<div id="opponentsDataStats">Elo 30 (12/4)</div>
+	<div id="pongGame" style="display: block; margin: 20px;" class="glass"><canvas id="pongCanvas" width="800" height="600"></canvas></div>
+	<div style="display: flex; flex-direction: column;">
+		<div id="opponentDiv" style="display: flex; ;" class="glass">
+			<h4>OPPOSANT</h4>
+			<hr style="width: 100%;;">
+			<div id="opponentsData">
+				<img src="pong/static/img/poda.png" id="opponentsDataPp">
+				<div id="opponentsDataText">
+					<div id="opponentsDataName">ngriveau #15</div>
+					<div id="opponentsDataStats">Elo 30 (12/4)</div>
+				</div>
 			</div>
 		</div>
-		<div id="opponentsData" class="glass">
-			<div id="opponentsDataText">
-				<div id="opponentsDataName">VS</div>
+		<div id="classement" class="glass">
+			<div id="classementTitle">
+				<h4>CLASSEMENT</h4>
+			</div>
+			<div id="classementDivPlayer">
+				<svg id="classementLoader"version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve"><path fill="#000" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"><animateTransform attributeName="transform" attributeType="XML" type="rotate"dur="1s" from="0 50 50"to="360 50 50" repeatCount="indefinite" /></path></svg>
 			</div>
 		</div>
-		<div id="opponentsData" class="glass">
-			<img src="pong/static/img/poda.png" id="opponentsDataPp">
-			<div id="opponentsDataText">
-				<div id="opponentsDataName">ngriveau #15</div>
-				<div id="opponentsDataStats">Elo 30 (12/4)</div>
-			</div>
-		</div>
-		<!-- <div id="opponentsHistory" class="glass">
-			<div class="opponentsHistoryTitle" style=" border-radius: 12px 15px 0px 0px;">
-				<div>ngriveau history</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryLoose">
-				<div>ngriveau vs titou</div>
-				<div>0-3</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryWin">
-				<div>ngriveau vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryWin">
-				<div>ngriveau vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryWin">
-				<div>ngriveau vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryLoose">
-				<div>ngriveau vs titou</div>
-				<div>0-3</div>
-			</div>
-			<hr>
-			<div class="opponentsHistoryWin">
-				<div>ngriveau vs titou</div>
-				<div>0-3</div>
-			</div>
-			<hr>
-			<div id="opponentsHistoryWinEnd"></div>
-		</div> -->
 	</div>
-	
+	<div id="chatSeachDiv">
+		<div id="btnSearch" class="glass" >
+			Search player
+		</div>
+		<div id="chat" class="glass" >
+			<div id="chatTitle">
+				<h4>CHAT WITH [...]</h4>
+			</div>
+		</div>
+	</div>
+	<div id="tournament" class="glass">
+		<h4 id="tournamentTitle">TOURNAMENT</h4>
+		.
+	</div>
+	<div id="friendAndLogoutBtn">
+		<div id="friends" class="glass">
+			<div id="friendsTitle">
+				FRIENDS
+			</div>
+			<div id="friendsUser"><p>● tico</p></div>
+			<div id="friendsUser"><p>● tchevrie</p></div>
+		</div>
+		<div id="btn-Logout" class="glass">Logout </div>
+	</div>
+	<div id="searchDiv" class="glass">
+		<div id="titleSearchDiv">
+			<h3>Search</h3>
+		</div>
+		<hr>
+		<div id="bodySearch">
+			<div id="leftModalSearch">
+				<input id="searchFriends" type="text">
+				<div id="usernameFriends">
+					<div id="usernameFriendsDisplay"></div>
+				</div>
+			</div>
+			<div class="vr"></div>
+			<div style="height: 100%; margin-bottom: 60px;">
 
-	<div id="pongGame" style="display: block;" class="glass">
-		<canvas id="pongCanvas" width="800" height="600"></canvas>
-	</div>
-	<div id="meDataHistory">
-		<div id="meHistory" class="glass">
-			<div class="meHistoryTitle" style=" border-radius: 12px 15px 0px 0px;">
-				<div>my history</div>
+				<div id="modalPicNameStatus">
+					<img src="pong/static/img/poda.png" id="modalPic">
+					<h3 id="modalUsername">ngriveau</h3>
+					<p id="modalStatus">● Online</p>
+				</div>
+				<div width="400" height="400" style="display: flex;">
+
+					<canvas id="pointChart" width="400" height="400"></canvas>
+					<canvas id="eloChart" width="400" height="400"></canvas>
+				</div>
 			</div>
-			<hr>
-			<div class="meHistoryLoose">
-				<div>me vs ngriveau</div>
-				<div>0-3</div>
-			</div>
-			<hr>
-			<div class="meHistoryWin">
-				<div>me vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="meHistoryWin">
-				<div>me vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="meHistoryWin">
-				<div>me vs titou</div>
-				<div>3-0</div>
-			</div>
-			<hr>
-			<div class="meHistoryLoose">
-				<div>me vs titou</div>
-				<div>0-3</div>
-			</div>
-			<hr>
-			<div class="meHistoryWin">
-				<div>me vs titou</div>
-				<div>0-3</div>
-			</div>
-			<div id="meHistoryWinEnd"></div>
 		</div>
 	</div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="{% static 'js/search.js' %}"></script>
 <script src="{% static 'js/pong.js' %}"></script>
+<script src="{% static 'js/ranking.js' %}"></script>
+
