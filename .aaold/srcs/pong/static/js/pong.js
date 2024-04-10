@@ -182,7 +182,7 @@ class Pong {
                 ctx.fillText("Left player !", canvas.width/2, canvas.height/2+canvas.height/7); 
             }
             if (socketJsonStartTimming == "")
-            this.startGame = true 
+                this.startGame = true 
         }
         if (this.stopGame)
             return 
@@ -433,3 +433,7 @@ async function startSocket(reMatch) {
 }
 if (token)
     startSocket(false);
+
+
+
+ 

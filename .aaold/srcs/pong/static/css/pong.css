@@ -3,17 +3,26 @@
 	flex-wrap: wrap;
 }
 
-#pongGame {
-	width: fit-content;
-	border-radius: 12px;
-	display: flex;
-	justify-content: center;
-	align-items: center; 
-	height: 602px;
-}
+@media only screen and (max-device-width: 941px){
 
-#pongCanvas{
-	border-radius: 12px;
+	#pongGame {
+		border-radius: 12px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: calc(100vw - 40px);
+		aspect-ratio: 4 / 3;
+	}
+}
+@media only screen and (min-device-width: 942px){
+	#pongGame {
+		border-radius: 12px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: calc(100vh - 210px);
+		aspect-ratio: 4 / 3;
+	}
 }
 
 #opponentDiv {
