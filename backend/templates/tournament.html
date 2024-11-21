@@ -1,0 +1,113 @@
+<!-- {% load static %} -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Form</title>
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<style>
+    @media (max-width: 600px) {
+            #divCreateTournamentHistory {
+                flex-direction: column-reverse;
+            }
+    }
+</style>
+
+
+<form id="createTournamentForm" class="createTournamentForm row g-3" method="POST" style="background-color: #b4b4b4; padding: 10px; margin: 20px; margin-bottom:0px; border-radius: 20px;">
+    <div style="display: flex; justify-content: space-between;" id="divCreateTournamentHistory">
+        <h1>Create tournament</h1>
+        <!-- <div class="dropdown" style="padding-right: 20px;">
+            <button class="btn btn-primary btn-custom-black dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Tournament history
+            </button>
+            <ul class="dropdown-menu" style="max-height: 130px; overflow-y: scroll;" id="tournamentHistory">
+                
+            </ul>
+        </div> -->
+    </div>
+    {% csrf_token %}
+    <div class="col-md-6" style="margin-top: 2px;">
+        <label for="tournamentName" class="form-label" style="margin-bottom: 2px;">Tournament name</label>
+        <input type="text" class="form-control" id="tournamentName" name="tournamentName" placeholder="WordCup">
+    </div>
+    <div class="col-md-6" style="margin-top: 2px;">
+        <label for="alias" class="form-label" style="margin-bottom: 2px;">Alias</label>
+        <input type="text" class="form-control" id="alias" name="alias" placeholder="Bob" autocomplete="username">
+    </div>
+    <div class="col-12" style="margin-top: 2px;">
+        <label for="numberOfPlayers" class="form-label" style="margin-bottom: 2px;">Number of players</label>
+        <select class="form-select" id="numberOfPlayers" name="numberOfPlayers">
+            <option selected>-</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="16">16</option>
+            <option value="32">32</option>
+            <option value="64">64</option>
+        </select>
+    </div>
+    <div class="col-12" style="margin-top: 10px;">
+        <div class="form-check form-switch">
+            <input id="switchPasswordCheckbox" class="form-check-input" type="checkbox" name="passwordSwitch">
+            <label class="form-check-label" for="switchPasswordCheckbox">Lock with a password</label>
+        </div>
+    </div>
+    <div id="divCreatePassword" class="col-md-6" style="margin-top: 2px; display: none;">
+        <label for="password" class="form-label" style="margin-bottom: 2px;">Password</label>
+        <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+        <!-- <input type="password" id="passwordLogin" class="form-control" placeholder="Password" name="password" autocomplete="current-password"> -->
+    </div>
+    <div id="divCreateConfirmPassword" class="col-md-6" style="margin-top: 2px; display: none;">
+        <label for="confirmPassword" class="form-label" style="margin-bottom: 2px;">Confirm Password</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" autocomplete="new-password">
+    </div>
+    <div class="col-12">
+        <button id="submitForm" type="submit" class="btn btn-primary btn-custom-black" style="width: 100%; margin-bottom: 8px;">Create tournament</button>
+    </div>
+</form>
+
+
+<div class="container content" style="margin-top:10px;">
+	<div style="margin: 16px; display: flex;flex-wrap:wrap; justify-content:center" id="listMatch">
+
+	</div>
+</div>
+
+
+<!-- toast -->
+<div id="liveToast" style="background-color: rgb(216, 92, 92);" class="toast align-items-center border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex" >
+        <div class="toast-body" id="liveToastMessage">
+            Bonjour la france
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+
+<!-- Modal -->
+
+<form action="POST">
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div id="aliasPrint" style="text-align: center;"></div>
+					<div id="aliasModal" class="col-md-6" style="margin-top: 2px; width: 100%;">
+						<label for="tournamentName" class="form-label" style="margin-bottom: 2px;">Alias for tournament:</label>
+						<input type="text" class="form-control" id="aliasForTournament" name="tournamentName" style="border: solid #a4afb9 1px;" placeholder="alias" autocomplete="username">
+					</div>
+					<div id="passswordModal" class="col-md-6" style="margin-top: 2px; width: 100%;">
+						<label for="tournamentName" class="form-label" style="margin-bottom: 2px;">Password</label>
+						<input type="password" class="form-control" id="passswordModalInput" name="tournamentName" style="border: solid #a4afb9 1px;" placeholder="password" autocomplete="current-password">
+					</div>
+				</div>
+				<div class="modal-footer" style="display: flex;">
+        <button id="enterInTournament" type="button" class="btn btn-primary btn-custom-black" style="flex: 1;">Enter in the tournament</button>
+        <button id ="closeModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width: 100px;">Close</button>
+    </div>
+</form>
+</div>
+</div>
+</div>
+

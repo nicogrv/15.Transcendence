@@ -1,0 +1,77 @@
+<div class="container-flex">
+	<div class="content1">
+		<h1 style="color: rgb(24, 24, 24)">Profile</h1>
+		<form class="editProfile" method="POST" enctype="multipart/form-data">
+			<div class="col-auto">
+				<div class="mb-3">
+					<label for="playerAvatar" class="form-label">Avatar</label>
+					<img id="currentAvatar" src="" alt="Current Avatar" class="img-thumbnail mb-2" style="max-width: 80px;">
+					<input class="form-control avatarPlayer" type="file" id="playerAvatar" name="avatar">
+				</div>
+				<div class="form-group">
+					<label for="playerName">Username</label>
+					<input type="text" class="form-control" id="playerName" placeholder="Nom du Joueur" name="username2">
+				</div>
+				<div class="form-group">
+					<label for="playerEmail">Email</label>
+					<input type="email" class="form-control" id="playerEmail" placeholder="Email" name="email2" disabled>
+				</div>
+				<input type="text" class="form-control" id="playerId" placeholder="Email" disabled style="display:none;">
+				<div class="form-floating mb-3 d-grid gap-2">
+					<button id="confirmModifyForm" type="button" class="btn btn-success btn-custom-black btn-lg" onclick="confirmEdit()">Confirm</button>
+				</div>
+				<div>
+					<button type="button" id="btnSendMail2fa" class="btn btn-success btn-custom-black btn-lg" data-bs-toggle="modal">Active 2FA</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="content1">
+		<h1 style="color: rgb(24, 24, 24)">Change password</h1>
+		<form class="changePassword" method="POST">
+			{% csrf_token %}
+			<div class="form-floating" style="display:none;">
+				<input type="text" class="form-control" id="usernameChangePassword" placeholder="Username" name="username" autocomplete="username">
+				<label for="usernameChangePassword">Username*</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="cpPassword" placeholder="Current Password" name="password2" autocomplete="current-password">
+				<label for="cpPassword">Current Password*</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="cpPasswordNew" placeholder="New password" name="passwordNew2" autocomplete="new-password">
+				<label for="cpPasswordNew">New password*</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" class="form-control" id="cpPasswordNewConfirm" placeholder="Confirm new password" name="passwordNewConfirm" autocomplete="new-password">
+				<label for="cpPasswordNewConfirm">Confirm new password*</label>
+			</div>
+			<div class="form-floating mb-3 d-grid gap-2">
+				<button id="changePassword" class="btn btn-success btn-custom-black" type="submit">Change password</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="modal2faactive" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal2faactiveLabel" aria-hidden="true">
+	<form action="POST" id="form2fa">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modal2faactiveLabel">Ative 2FA</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="playerEmail">Mail code</label>
+						<input type="text" class="form-control" id="codeMail2fa" name="codeMail2fa" placeholder="12345678">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary btn-custom-black" id="activeModalBtn2fa">active</button>
+				</div>
+			</div>
+		</div>
+	</form>
+  </div>

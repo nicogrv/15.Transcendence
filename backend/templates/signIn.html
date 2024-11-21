@@ -1,0 +1,23 @@
+<div class="container">
+    <h1 class="h1" style="color: rgb(24, 24, 24)">Login</h1>
+    <form class="signIn" method="POST">
+		{% csrf_token %}
+        <div class="form-floating">
+            <input type="text" id="usernameLogin" class="form-control" placeholder="usernameofuser" name="username" autocomplete="username">
+            <label for="usernameLogin">Username*</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" id="passwordLogin" class="form-control" placeholder="Password" name="password" autocomplete="current-password">
+            <label for="passwordLogin">Password*</label>
+        </div>
+        <div class="form-floating" style="display: none;" id="tfaLoginDiv">
+            <input type="text" id="tfaLogin" class="form-control" placeholder="12345678" name="tfa" autocomplete="tfa">
+            <label for="tfaLogin">Email code 2fa*</label>
+        </div>
+        <br>
+        <div class="form-floating mb-3 d-grid gap-2">
+            <button id="login" type="submit" class="btn btn-primary btn-lg btn-custom-black">Login</button>
+            <button id="loginIntra" type="button" class="btn btn-primary btn-lg  btn-custom-black">Login with Intra 42</button>
+        </div>
+    </form>
+</div>

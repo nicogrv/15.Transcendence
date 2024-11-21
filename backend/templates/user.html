@@ -1,0 +1,249 @@
+<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <!-- <img src="..." class="rounded me-2" alt="..."> -->
+            <strong class="me-auto">Transcendance</strong>
+            <small>now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div id="messageAlert" class="toast-body">
+        </div>
+    </div>
+</div>
+<div class="container content">
+	<div class="row">
+		<div class="col">
+			<div class="info" style="color: black;">
+				<span id="frAvatar"><img style="max-width: 300px; max-height: 300px;"></span>
+			</div>
+			<div class="user-status">
+				<div class="row">
+					<div class="col">
+						<h1 id="frName"></h1>
+					</div>
+					<div class="col">
+						<span class="status-indicator" id="frStatus"></span>
+					</div>
+				</div>
+			</div>
+			<div class="info" style="color: black;">
+				<span id="frRelation"></span>
+			</div>
+		</div>
+		<div class="col">
+			<div class="info" style="color: black;">
+				<strong>Email:</strong> <span id="frEmail"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Date joined:</strong> <span id="frDate"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Friends:</strong> <span id="frFriend"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Games Played:</strong> <span id="frPlayed"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Victories:</strong> <span id="frVictories"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Defeats:</strong> <span id="frDefeats"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Elo:</strong> <span id="frElo"></span>
+			</div>
+			<div class="info" style="color: black;">
+				<strong>Score:</strong> <span id="frScore"></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+
+	<div class="accordion accordion-flush" id="accordionFlushExample">
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+					Tournament History
+				</button>
+			</h2>
+			<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+				<ul id="tournamentHistoryFriend">
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion accordion-flush" id="accordionFlush">
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+					Match History
+				</button>
+			</h2>
+			<div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+				<ul id="matchHistoryFriend">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container content2">
+    <div class="px-4 text-center">
+        <div class="row gx-5">
+            <div class="col-md-6">
+                <div class="p-3 canvas-wrapper">
+                    <canvas id="myChart1" width="auto" height="auto"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 canvas-wrapper">
+                    <canvas id="myChart4" width="auto" height="auto"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container content2">
+	<h3>Comparaison</h3>
+		<div class="col">
+		   <div class="p-3"><canvas id="myChart5" width=auto height=auto></canvas></div>
+		</div>
+</div>
+
+
+<script>
+	let myChart1;
+	function createChart1(victories, defeats)
+	{
+		if (myChart1)
+		{
+            myChart1.destroy();
+        }
+            var ctx = document.getElementById('myChart1').getContext('2d');
+            myChart1 = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Victories', 'Defeats'],
+                    datasets: [{
+                        label: '# of games',
+                        data: [victories, defeats],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+					responsive: true,
+        			maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+
+	let myChart4;
+	function createChart4(data)
+	{
+		if (myChart4)
+		{
+            myChart4.destroy();
+        }
+            var ctx = document.getElementById('myChart4').getContext('2d');
+            myChart4 = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Victories', 'Defeats', 'Games Played', 'Elo', 'Score', 'Tournaments won'],
+                    datasets: [{
+						label: 'You: ' + data.player,
+						data: [data.wins, data.losses, data.games_played, data.elo, data.score, data.tournaments_won],
+						fill: true,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgb(255, 99, 132)',
+						pointBackgroundColor: 'rgb(255, 99, 132)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgb(255, 99, 132)'
+					}, {
+						label: 'Median',
+						data: [data.metrics_data.mean_victories, data.metrics_data.mean_defeats, data.metrics_data.mean_games_played, data.metrics_data.mean_elo, data.metrics_data.mean_score, data.metrics_data.mean_tournaments_won],
+						fill: true,
+						backgroundColor: 'rgba(54, 162, 235, 0.2)',
+						borderColor: 'rgb(54, 162, 235)',
+						pointBackgroundColor: 'rgb(54, 162, 235)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgb(54, 162, 235)'
+					}]
+                },
+                options: {
+					responsive: true,
+        			maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+		let myChart5;
+		function createChart5(data, dataUser)
+		{
+			if (myChart5)
+			{
+				myChart5.destroy();
+			}
+				var ctx = document.getElementById('myChart5').getContext('2d');
+				myChart5 = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: ['Victories', 'Defeats', 'Games Played', 'Elo', 'Score', 'Tournaments won'],
+						datasets: [{
+							label: 'You: ' + data.player,
+							data: [data.wins, data.losses, data.games_played, data.elo, data.score, data.tournaments_won],
+							backgroundColor: [
+								'rgba(54, 162, 235, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+							],
+							borderColor: [
+								'rgba(255, 99, 132, 1)',
+								'rgba(75, 192, 192, 1)',
+							],
+							fill: false,
+						}, {
+							type: 'line',
+							label: dataUser.player,
+							data: [dataUser.wins, dataUser.losses, dataUser.games_played, dataUser.elo, dataUser.score, dataUser.tournaments_won],
+							fill: false,
+							borderColor: 'rgb(54, 162, 235)'}]
+					},
+					options: {
+						responsive: true,
+        				maintainAspectRatio: false,
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				});
+			}
+
+</script>
+
+

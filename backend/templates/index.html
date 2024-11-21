@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Transcendance</title>
+		<link rel="icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+		<link rel="stylesheet" href="{% static 'css/form.css' %}">
+		<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+		<!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+	</head>
+
+	<body style="background-color: #081c15;">
+		<div id="noLogNav">
+			{% include 'noLogNav.html' %}
+		</div>
+
+		<div id="LogNav" style="display:none;">
+			{% include 'nav.html' %}
+		</div>
+
+		<div class="bg"></div>
+		<div class="bg bg2"></div>
+		<div class="bg bg3"></div>
+
+		<div id="homeDiv">
+			<div class="d-flex justify-content-center">
+				<div id="spinners" class="spinner-border text-success" role="status" style="display:none;">
+				  <span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
+			<div id="noLogHome" style="text-align: center; padding: 10px;" style="display: none;">
+				<h1 class="h1" style="color: rgb(24, 24, 24)">TRANSCENDANCE</h1>
+				<button type="button" class="btn btn-primary btn-lg btn-custom-black" onclick="changeDiv('signInDiv')">signIn </button>
+				<button type="button" class="btn btn-primary btn-lg btn-custom-black" onclick="changeDiv('signUpDiv')">signUp</button>
+			</div>
+		</div>
+
+		<div id="signInDiv" class="content" style="display: none;">
+			{% include 'signIn.html' %}
+		</div>
+
+		<div id="signUpDiv" class="content" style="display: none;">
+			{% include 'signUp.html' %}
+		</div>
+
+		<div id="accountDiv" style="display:none;">
+			{% include 'account.html' %}
+		</div>
+
+		<div id="settingsDiv" style="display:none;">
+			{% include 'settings.html' %}
+		</div>
+
+		<div id="friendsListDiv" style="display:none;">
+			{% include 'friends.html' %}
+		</div>
+
+		<div id="userProfileDiv" style="display:none;">
+			{% include 'user.html' %}
+		</div>
+
+		<div id="searchDiv" style="display:none;">
+			{% include 'search.html' %}
+		</div>
+
+		<div id="pongDiv" style="display:none;">
+			{% include 'pong.html' %}
+		</div>
+
+		<div id="tournamentDiv" style="display:none;">
+			<!-- <div class="container content" style="background-color: transparent; box-shadow:none;"> -->
+				{% include 'tournament.html' %}
+			<!-- </div> -->
+		</div>
+
+		<div id="tournamentEditDiv" style="display:none;">
+			<div class="container content">
+				<div style="text-align: center;">
+					{% include 'tournamentEdit.html'%}
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="modal2fa42" tabindex="-1" aria-labelledby="modal2fa42Label" aria-hidden="true">
+			<form id="formHome"></form>
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="modal2fa42Label">2FA for 42 auth</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="playerEmail">Mail code</label>
+							<input type="text" class="form-control" id="codeMail2fa42" placeholder="12345678">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" id="activeModalBtn2fa42">active</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+		<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>		<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+		<script src="{% static 'js/utils.js' %}" defer></script>
+		<script src="{% static 'js/sockets.js' %}" defer></script>
+		<script src="{% static 'js/signUp.js' %}" defer></script>
+		<script src="{% static 'js/account.js' %}" defer></script>
+		<script src="{% static 'js/signIn.js' %}" defer></script>
+		<script src="{% static 'js/friends.js' %}" defer></script>
+		<script src="{% static 'js/login42.js' %}" defer></script>
+		<script src="{% static 'js/search.js' %}" defer></script>
+		<script src="{% static 'js/tournament.js' %}" defer></script>
+		<script src="{% static 'js/pong.js' %}" defer></script>
+		<script src="{% static 'js/logout.js' %}" defer></script>
+		<script src="{% static 'js/search.js' %}" defer></script>
+	</body>
+
+	<!-- <footer class="footer" style="background-color: mediumorchid; padding: 1%; bottom: 0;">
+        <div class="footer-content" style="margin:0 auto; color:white; font-size: 16px">
+            ft_transcendance - 2024
+        </div>
+    </footer> -->
+</html>
+

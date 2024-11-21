@@ -1,0 +1,220 @@
+{% load static %}
+<div id ="logOk">
+	<div class="container content">
+		<div class="row">
+			<div class="col">
+				<div class="info" style="color: black;">
+					<span id="accountAvatar"><img class="responsive-img"></span>
+				</div>
+				<div class="user-status">
+					<div class="row">
+						<div class="col">
+							<h1 id="accountName"></h1>
+						</div>
+						<div class="col">
+							<span class="status-indicator" id="accountStatus" style="background-color: grey;"></span>
+						</div>
+					</div>
+				</div>
+				<div class="info" style="color: black;">
+					<span id="accountRelation">
+						<button style="background-color: rgb(24, 24, 24);; color:white">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+								<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+							</svg>Myself
+						</button>
+					</span>
+				</div>
+			</div>
+			<div class="col">
+				<div class="info" style="color: black;">
+					<strong>Email:</strong> <span id="accountEmail"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Date joined:</strong> <span id="accountDate"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Friends:</strong> <span id="accountFriend"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Games Played:</strong> <span id="accountPlayed"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Victories:</strong> <span id="accountVictories"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Defeats:</strong> <span id="accountDefeats"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Elo:</strong> <span id="accountElo"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Score:</strong> <span id="accountScore"></span>
+				</div>
+				<div class="info" style="color: black;">
+					<strong>Tournaments won:</strong> <span id="accountTournament"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+<!-- <div class="container">
+	<div class="accordion accordion-flush" id="accordionFlushExample">
+		<div class="accordion-item">
+		  <h2 class="accordion-header">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+				Tournament history
+			</button>
+		  </h2>
+		  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+			<div class="accordion-body">
+				<ul class="dropdown-menu" id="tournamentHistory">
+					<li>bjr </li>
+					<li>coucou</li>
+				</ul>
+			</div>
+		  </div>
+		</div>
+	  </div>
+</div> -->
+
+<div class="container">
+
+	<div class="accordion accordion-flush" id="accordionFlushExample">
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+					Tournament History
+				</button>
+			</h2>
+			<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+				<ul id="tournamentHistory">
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion accordion-flush" id="accordionFlush">
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+					Match History
+				</button>
+			</h2>
+			<div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+				<ul id="matchHistory">
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container content2">
+    <div class="px-4 text-center">
+        <div class="row gx-5">
+            <div class="col-md-6">
+                <div class="p-3 canvas-wrapper">
+                    <canvas id="myChart" width="auto" height="auto"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 canvas-wrapper">
+                    <canvas id="myChart3" width="auto" height="auto"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+</div>
+
+<script>
+	let myChart;
+	function createChart(victories, defeats)
+	{
+		if (myChart)
+		{
+            myChart.destroy();
+        }
+            var ctx = document.getElementById('myChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Victories', 'Defeats'],
+                    datasets: [{
+                        label: '# of games',
+                        data: [victories, defeats],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+							'rgba(255, 99, 132, 0.2)',
+                            // 'rgba(54, 162, 235, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+							'rgb(255, 99, 132)',
+                            // 'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+					responsive: true,
+        			maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+
+	let myChart3;
+	function createChart3(data)
+	{
+		if (myChart3)
+		{
+            myChart3.destroy();
+        }
+            var ctx = document.getElementById('myChart3').getContext('2d');
+            myChart3 = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Victories', 'Defeats', 'Games Played', 'Elo', 'Score', 'Tournaments won'],
+                    datasets: [{
+						label: 'You: ' + data.player,
+						data: [data.wins, data.losses, data.games_played, data.elo, data.score, data.tournaments_won],
+						fill: true,
+						backgroundColor: 'rgba(75, 192, 192, 0.2)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+					}, {
+						label: 'Median',
+						data: [data.metrics_data.mean_victories, data.metrics_data.mean_defeats, data.metrics_data.mean_games_played, data.metrics_data.mean_elo, data.metrics_data.mean_score, data.metrics_data.mean_tournaments_won],
+						fill: true,
+						backgroundColor: 'rgba(54, 162, 235, 0.2)',
+						borderColor: 'rgb(54, 162, 235)',
+						pointBackgroundColor: 'rgb(54, 162, 235)',
+						pointBorderColor: '#fff',
+						pointHoverBackgroundColor: '#fff',
+						pointHoverBorderColor: 'rgb(54, 162, 235)'
+					}]
+                },
+                options: {
+					responsive: true,
+        			maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+</script>

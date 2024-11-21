@@ -1,0 +1,27 @@
+<div class="container">
+	<h1 style="color: rgb(24, 24, 24)">SignUp</h1>
+	<form class="signUp" method="POST">
+		{% csrf_token %}
+		<div class="form-floating">
+			<input type="text" id="usernameSignUp" class="form-control" id="floatingUsername" placeholder="usernameofuser" name="username1" autocomplete="username">
+			<label for="usernameSignUp">Username*</label>
+		</div>
+		<div class="form-floating">
+			<input type="email" id="emailSignUp" class="form-control" id="floatingEmail" placeholder="name@example.com" name="email1" autocomplete="email">
+			<label for="emailSignUp">Email*</label>
+		</div>
+		<div class="form-floating">
+			<input type="password" id="passwordSignUp" class="form-control" placeholder="Password" name="password1" autocomplete="new-password">
+			<label for="passwordSignUp">Password*</label>
+		</div>
+		<div class="form-floating">
+			<input type="password" id="confirmPassowordSignUp" class="form-control" placeholder="Confirm Password" name="confirm_password1" autocomplete="new-password">
+			<label for="confirmPassowordSignUp">Confirm Password*</label>
+		</div>
+		<br>
+		<div class="form-floating mb-3 d-grid gap-2">
+			<button type="submit" class="btn btn-primary btn-lg btn-custom-black">Register</button>
+		</div>
+	</form>
+</div>
+
